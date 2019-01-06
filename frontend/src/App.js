@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import TwitterLogin from 'react-twitter-auth';
-import FacebookLogin from 'react-facebook-login';
+//import TwitterLogin from 'react-twitter-auth';
+//import FacebookLogin from 'react-facebook-login';
 import { GoogleLogin } from 'react-google-login';
 import config from './config.json';
 
@@ -27,14 +27,18 @@ class App extends Component {
             mode: 'cors',
             cache: 'default'
         };
-        fetch('http://localhost:4000/api/v1/auth/google', options).then(r => {
+        fetch('http://localhost:4000/api/v1/auth/google', options)
+ 
+        .then(r => {
             const token = r.headers.get('x-auth-token');
+            console.log(r);
+            console.log(token)
             r.json().then(user => {
                 if (token) {
                     this.setState({isAuthenticated: true, user, token})
                 }
             });
-        })
+        }) 
     };
 
     render() {
