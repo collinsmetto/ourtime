@@ -1,6 +1,7 @@
 var app = require('./app');
 var debug = require('debug')('backend:server');
 var http = require('http');
+//const router = express.Router();
 
 var port = normalizePort(process.env.PORT || '4000');
 app.set('port', port);
@@ -22,6 +23,7 @@ function normalizePort(val) {
 
     return false;
 }
+//app.use('/api/v1/', router);
 
 var expressServerUtils = require('express-server-utils')(server, port);
 expressServerUtils.listen();

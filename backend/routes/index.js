@@ -6,7 +6,11 @@ var config = require('../config');
 var request = require('request');
 require('../passport')();
 
-
+//Middle ware that is specific to this router
+/*router.use(function timeLog(req, res, next) {
+    console.log('Time: ', Date.now());
+    next();
+  }); */
 
 
 router.route('/auth/google')

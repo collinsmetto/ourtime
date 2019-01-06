@@ -5,11 +5,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var app = express();
+
+/*
+app.use(express.static('public'));
+app.use(('./routes/routes'));
+*/
+var app = express();
 
 var index = require('./routes/index');
 
-var app = express();
-
+//var app = require('express')(); 
 var corsOption = {
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -30,6 +36,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*
+app.listen(4000, function (err) {
+    if (err) { 
+       console.log(err);
+    } else {
+       console.log("App started at port 4000");
+    }    
+});
+*/
 app.use('/api/v1/', index);
 
 module.exports = app;
