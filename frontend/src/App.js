@@ -1,14 +1,44 @@
 import React, { Component } from 'react';
-//import TwitterLogin from 'react-twitter-auth';
-//import FacebookLogin from 'react-facebook-login';
+import MenuContainer from "./MenuContainer";
+import Calendar from "react-big-calendar";
+import moment from "moment";
+import Header from './Header.js';
+import "./App.css";
+
+import axios from "axios";
+import Input from "@material-ui/core/Button";
 import { GoogleLogin } from 'react-google-login';
 import config from './config.json';
+import GroupList from './GroupList.js'
+import GroupItems from './GroupItems.js'
+
+
+import "react-big-calendar/lib/css/react-big-calendar.css";
+
+const localizer = Calendar.momentLocalizer(moment);
 
 class App extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { isAuthenticated: false, user: null, token: ''};
+        this.stateCal = {
+     
+            events: [
+              
+              {
+                start: new Date('2018-12-08T02:00:00-05:00'),
+                end: new Date('2018-12-08T03:00:00-05:00'),
+                title: "Some title" 
+              },
+      
+              {
+              start: new Date(2019, 0, 1, 12, 30),
+              end: new Date(2019, 0, 1, 17, 15),
+              title: "Trial#2"
+              }
+            ]
+          };
     }
 
     logout = () => {
@@ -18,7 +48,7 @@ class App extends Component {
     onFailure = (error) => {
         alert(error);
     };
-
+/*
     googleResponse = (response) => {
         const tokenBlob = new Blob([JSON.stringify({access_token: response.accessToken}, null, 2)], {type : 'application/json'});
         const options = {
@@ -40,11 +70,177 @@ class App extends Component {
             });
         }) 
     };
+*/
+  
 
-    render() {
+  // just a note, here, in the front end, we use the id key of our data object 
+  // in order to identify which we want to Update or delete.
+  // for our back end, we use the object id assigned by MongoDB to modify 
+  // data base entries
+
+  // our first get method that uses our backend api to 
+  // fetch data from our data base
+  /*
+  getDataFromDb = () => {
+    fetch("/api/getData")
+      .then(data => data.json())
+      .then(res => this.setState({ data: res.data }));
+  };
+  
+  */
+  
+  // here is our UI
+  // it is easy to understand their functions when you 
+  // see them render into our screen
+  render() {
+    const { data } = this.state;
+
+    // our put method that uses our backend api
+    // to create new query into our data base
+    let putDataToDB = message => {
+      let currentIds = this.state.data.map(data => data.id);
+      let idToBeAdded = 0;
+      while (currentIds.includes(idToBeAdded)) {
+        ++idToBeAdded;
+      }
+
+      axios.post("/api/putData", {
+        id: idToBeAdded,
+        message: message
+      });
+    };
+
+
+    // our delete method that uses our backend api 
+    // to remove existing database information
+    let deleteFromDB = idTodelete => {
+      let objIdToDelete = null;
+      this.state.data.forEach(dat => {
+        if (dat.id === idTodelete) {
+          objIdToDelete = dat._id;
+        }
+      });
+
+      axios.delete("/api/deleteData", {
+        data: {
+          id: objIdToDelete
+        }
+      });
+    };
+
+
+    // our update method that uses our backend api
+    // to overwrite existing data base information
+    let updateDB = (idToUpdate, updateToApply) => {
+      let objIdToUpdate = null;
+      this.state.data.forEach(dat => {
+        if (dat.id === idToUpdate) {
+          objIdToUpdate = dat._id;
+        }
+      });
+
+      axios.post("/api/updateData", {
+        id: objIdToUpdate,
+        update: { message: updateToApply }
+      });
+    };
+
+
+
+    
+    return (
+        <div>
+        <div>
+           <Header />
+        </div>
+        
+        <body>
+          <div className="row">
+            <div className="column menu">
+              <MenuContainer 
+                addGroupToDB={putDataToDB}
+                deleteGroupFromDB={deleteFromDB}
+                updateGroupInDB={updateDB}
+              />
+            </div>
+        
+            <div className="column calendar">
+              <Calendar
+                localizer={localizer}
+                defaultDate={new Date()}
+                defaultView="month"
+                events={this.stateCal.events}
+                style={{ height: "80vh" }}
+              />
+            </div>
+          
+          </div>
+        
+  
+          
+  
+          <div style={{ padding: "10px" }}>
+            <Input
+              type="text"
+              onChange={e => this.setState({ message: e.target.value })}
+              placeholder="add something in the database"
+              style={{ width: "200px" }}
+            />
+            <button onClick={() => this.putDataToDB(this.state.message)}>
+              ADD
+            </button>
+          </div>
+  
+          <div style={{ padding: "10px" }}>
+            <Input
+              type="text"
+              style={{ width: "200px" }}
+              onChange={e => this.setState({ idToDelete: e.target.value })}
+              placeholder="put id of item to delete here"
+            />
+            <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>
+              DELETE
+            </button>
+          </div>
+  
+          <div style={{ padding: "10px" }}>
+            <Input
+              type="text"
+              style={{ width: "200px" }}
+              onChange={e => this.setState({ idToUpdate: e.target.value })}
+              placeholder="id of item to update here"
+            />
+            <Input
+              type="text"
+              style={{ width: "200px" }}
+              onChange={e => this.setState({ updateToApply: e.target.value })}
+              placeholder="put new value of the item here"
+            />
+            <button
+              onClick={() =>
+                this.updateDB(this.state.idToUpdate, this.state.updateToApply)
+              }
+            >
+            </button>
+          </div>
+  
+        </body>
+  
+        </div>
+      );
+    }
+  }
+  
+  export default App;
+    
+    //render() {
+    /*
     let content = !!this.state.isAuthenticated ?
             (
                 <div>
+                   <Header/>
+                    <GroupList/>
+
                     <p>Authenticated</p>
                     <div>
                         {this.state.user.email}
@@ -56,15 +252,20 @@ class App extends Component {
                     </div>
                 </div>
             ) :
+            
+            
             (
-                <div>
-                    
+                <div>        
                     <GoogleLogin
                         clientId={config.GOOGLE_CLIENT_ID}
                         buttonText="Login"
                         onSuccess={this.googleResponse}
                         onFailure={this.onFailure}
                     />
+
+
+
+
                 </div>
             );
 
@@ -77,3 +278,4 @@ class App extends Component {
 }
 
 export default App;
+*/

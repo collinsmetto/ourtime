@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.8.1",
     "dotenv": "^4.0.0",
+    "material-icons": "^0.3.0",
+    "moment": "^2.23.0",
+    "nodemailer": "^5.0.0",
     "react": "^16.0.0",
+    "react-big-calendar": "^0.20.2",
     "react-dom": "^16.0.0",
     "react-facebook-login": "^3.6.2",
     "react-google-login": "^3.0.1",
     "react-router-dom": "^4.3.1",
+    "react-search-box": "^2.0.0",
     "react-twitter-auth": "0.0.9"
   },
   "devDependencies": {

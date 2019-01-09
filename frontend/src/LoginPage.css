@@ -1,0 +1,23 @@
+.loginPage {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  background-image: url(background-image.jpg); 
+  background-size: 'cover';
+  background-position: 'center center';
+  background-repeat: 'no-repeat'; 
+  /* background-color: black; */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcomeText {
+  color: white;
+  font-size: 30px;
+  align-content: center;
+}
