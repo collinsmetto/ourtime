@@ -27,14 +27,17 @@ router.route('/myfreetime').get((req, res) => {
             email:user.email
         }, function(err, user) {
            console.log("hererererererererer");
-            console.log(user.googleProvider.token)
+           console.log(user.googleProvider.token)
+            
+            
+            console.log("///////////////////////////////////// \n\n")
             var google_calendar = new gcal.GoogleCalendar(user.googleProvider.token);
             console.log(google_calendar.events)
             // events for this user 
-            google_calendar.events.list('collinsmetto@gmail.com', 
+            google_calendar.events.list('primary', 
             {timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
             function(err, eventsList){
-                console.log("here")
+                console.log("here\n\n")
                 console.log(eventsList)
             });
 
@@ -47,7 +50,8 @@ router.route('/myfreetime').get((req, res) => {
             res.json({
                 user: user, // return both user and token
                 token: token,
-                events: user.events
+                events: user.events,
+                here: "pass from route freetime worked"
             });
          });
       });

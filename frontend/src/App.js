@@ -73,7 +73,7 @@ class App extends Component {
             })
             .then(function(myJson) {
               
-            console.log(JSON.stringify(myJson));
+            console.log(JSON.stringify(myJson.here));
           //  this.stateCal.events = myJson.events;
           }
           );

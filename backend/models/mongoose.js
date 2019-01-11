@@ -20,7 +20,7 @@ module.exports = function () {
                 id: String,
                 token: String
             },
-            select: true // whether appears in queries 
+            select: true // whether appears in queries
         }, 
         googleId: String,
         events: [],
