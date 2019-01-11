@@ -20,7 +20,7 @@ module.exports = function () {
                 id: String,
                 token: String
             },
-            select: false
+            select: true // whether appears in queries 
         }, 
         googleId: String,
         events: [],
@@ -36,7 +36,9 @@ module.exports = function () {
         return this.findOne({
             'googleProvider.id': profile.id
         }, function(err, user) {
-            var google_calendar = new gcal.GoogleCalendar(accessToken);
+
+            
+
             var sampleEvents = [
                     {
                         start: new Date(2019, 0, 9, 12, 30),
@@ -56,12 +58,10 @@ module.exports = function () {
                         title: "A Suggested meeting time for Group OurTime" 
                     }
                 ]
-            // google_calendar.events.list({calendarId:'primary', 
-            // timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
-            // function(err, eventsList) {
+           
                     // no user was found, lets create a new one
                     if (!user) {
-
+                   
                         var newUser = new that({
                             googleId: profile.id,
                             fullName: profile.displayName,
@@ -84,7 +84,7 @@ module.exports = function () {
             } else { // update calendar events
                 return cb(err, user);
             }
-        // }); calendar brackets 
+       
         });
     };
 

@@ -7,13 +7,13 @@ var User = require('mongoose').model('User');
 // router.get('/', authCheck, (req, res) 
 var jwt = require('jsonwebtoken'); // added 
 var config = require('../config');
-// router.get('/auth/response', (req, res) => {
-    router.route('/myfreetime')
-    .get((req, res) => {
-        console.log("in /profile/myfreetime");
+var gcal = require('google-calendar');
+
+router.route('/myfreetime').get((req, res) => {
+        console.log("in /profile/myfreetime NOW");
         console.log(req.headers.authorization)
     
-      var token = req.headers.authorization; //req.body.params.resp|| req.body.token || req.query.token || req.headers['x-auth-token'] ||req.cookies.token;
+      var token = req.headers.authorization; 
       if (!token) {
           console.log("Token not received");
        return res.status(401).json({message: "Must pass token"});
@@ -21,11 +21,28 @@ var config = require('../config');
     // Check token that was passed by decoding token using secret
      jwt.verify(token, config.googleAuth.clientSecret, function(err, user) {
         if (err) throw err;
+      
        //return user using the id from w/in JWTToken
         User.findOne({
             email:user.email
         }, function(err, user) {
-            console.log(user.events);
+           console.log("hererererererererer");
+            console.log(user.googleProvider.token)
+            var google_calendar = new gcal.GoogleCalendar(user.googleProvider.token);
+            console.log(google_calendar.events)
+            // events for this user 
+            google_calendar.events.list('collinsmetto@gmail.com', 
+            {timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
+            function(err, eventsList){
+                console.log("here")
+                console.log(eventsList)
+            });
+
+
+
+
+            // console.log("hererererer")
+            // console.log(user.events);
            if (err) throw err;
             res.json({
                 user: user, // return both user and token
