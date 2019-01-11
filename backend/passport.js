@@ -20,23 +20,8 @@ var gcal = require('google-calendar');
             clientSecret: config.googleAuth.clientSecret
         },
         function (accessToken, refreshToken, profile, done) {
-            console.log("passport.js HEREERERERERERER")
-/*
-            var google_calendar = new gcal.GoogleCalendar(accessToken);
+            console.log("passport.js  fires functions ...")
 
-            // freebusy test
-            var check = {
-            timeMin: '2019-01-1T13:00:00-05:00',     
-            timeMax:'2019-01-11T15:00:00-05:00',
-            timeZone: 'America/New_York',
-            items: [{id:'collinsmetto@gmail.com'}]
-            }
-        google_calendar.freebusy.query(check, function(err, response){
-               if (err) console.log(err);
-               else  console.log(response);
-           });
-        
-*/      
  User.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
                 return done(err, user);
             });   
@@ -59,3 +44,20 @@ var gcal = require('google-calendar');
             UserTime.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
                 return done(err, user);
             }); */
+
+            /*
+            var google_calendar = new gcal.GoogleCalendar(accessToken);
+
+            // freebusy test
+            var check = {
+            timeMin: '2019-01-1T13:00:00-05:00',     
+            timeMax:'2019-01-11T15:00:00-05:00',
+            timeZone: 'America/New_York',
+            items: [{id:'collinsmetto@gmail.com'}]
+            }
+        google_calendar.freebusy.query(check, function(err, response){
+               if (err) console.log(err);
+               else  console.log(response);
+           });
+        
+*/      

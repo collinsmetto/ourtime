@@ -21,77 +21,25 @@ class LoginPage extends Component {
     onFailure = (error) => {
         alert(error);
       }
-      
-    
-    //   getDataFromDb = () => {
-    //     const options = {
-    //         method: "GET",
-    //         body: this.state.token,
-    //         mode: "cors",
-    //         cache: "default",
-    //         headers:{'Authorization': 'Bearer ${this.state.token}', 'Accept': 'application/json',
-    //         'Content-Type': 'application/json'}
-    //     };
-    //     console.log(options.headers)
-        
-    //         /****/
-    //     //fetch('http://localhost:4000/api/v1/auth/response', options).then(r => { });
-         
-    //     axios.get("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
-    // }
     getDataFromDb = () => {
-        const options = {
-            method: "POST",
-            body: this.state.token,
-            mode: "cors",
-            cache: "default",
-            params: {resp: this.state.token},
-            // headers:{'Authorization': 'Bearer ${this.state.token}', 'Accept': 'application/json',
-            // 'Content-Type': 'application/json'}
-        };
-        //console.log(options.headers)
-        
-            /****/
-        
-       // axios.get("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
-    // fetch('http://localhost:4000/api/v1/auth/response', 
-    // {
-    //     method: "POST",
-    //     body: this.state.token,
-    //     mode: "cors",
-    //     cache: "default",
-    //     params: {resp: this.state.token},
-    //      headers:{'Accept': 'application/json',
-    //      'Content-Type': 'application/json'}
-    // })
- const myHeaders = new Headers();
+            const myHeaders = new Headers();
 
- myHeaders.append('Content-Type', 'application/json');
- myHeaders.append('Authorization', this.state.token);
- 
-fetch('http://localhost:4000/api/v1/auth/response', {
-   method: 'GET',
-   headers: myHeaders,
- })
-    // {
-    //     method: "POST",
-    //     body: this.state.token,
-    //     mode: "cors",
-    //     cache: "default",
-    //     params: {resp: this.state.token},
-    //      headers:{'Accept': 'application/json',
-    //      'Content-Type': 'application/json'}
-    // })
-        .then(function(response) { 
-        //     console.log("token!!!!!!! below")
-        // console.log(this.state.token)
-        //  console.log(response)
-         return response.json();
-        })
-        .then(function(myJson) {
-        console.log(JSON.stringify(myJson));
-      }
-      );
+                    myHeaders.append('Content-Type', 'application/json');
+                    myHeaders.append('Authorization', this.state.token);
+                    
+                    fetch('http://localhost:4000/api/v1/auth/response', {
+                    method: 'GET',
+                    headers: myHeaders,
+                    })
+                        
+                            .then(function(response) { 
+                            
+                            return response.json();
+                            })
+                            .then(function(myJson) {
+                            console.log(JSON.stringify(myJson));
+                        }
+                        );
     }
     
     render() {
@@ -105,6 +53,7 @@ fetch('http://localhost:4000/api/v1/auth/response', {
             };
             fetch('http://localhost:4000/api/v1/auth/google', options).then(r => {
                 const token = r.headers.get('x-auth-token');
+                console.log(token);
                 r.json().then(user => {
                     if (token) {
                         this.setState({isAuthenticated: true, user, token})
@@ -128,7 +77,8 @@ fetch('http://localhost:4000/api/v1/auth/response', {
                         Log out
                     </button>
                 </div> */}
-                <App />
+                <App tokenFromLogIn = {this.state.token} />
+             
                 <div>
                     <button onClick={this.getDataFromDb} className="button">
                         GetDatafromDb
@@ -174,3 +124,24 @@ fetch('http://localhost:4000/api/v1/auth/response', {
 }
 
 export default LoginPage;
+
+
+
+
+/***** */
+
+ //console.log(options.headers)
+        
+            /****/
+        
+       // axios.get("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
+    // fetch('http://localhost:4000/api/v1/auth/response', 
+    // {
+    //     method: "POST",
+    //     body: this.state.token,
+    //     mode: "cors",
+    //     cache: "default",
+    //     params: {resp: this.state.token},
+    //      headers:{'Accept': 'application/json',
+    //      'Content-Type': 'application/json'}
+    // })

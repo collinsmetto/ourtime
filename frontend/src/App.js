@@ -21,9 +21,10 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { isAuthenticated: false, user: null, token: ''};
+        this.state = { isAuthenticated: false, user: null, token: this.props.tokenFromLogIn};
+        
         this.stateCal = {
-     
+     /*
             events: [
               {
                 start: new Date(2019, 0, 9, 12, 30),
@@ -37,14 +38,13 @@ class App extends Component {
                 title: "A Suggested meeting time for Group OurTime" 
               },
 
-              // {
-              //   start: new Date(2019, 0, 9, 1, 30),
-              //   end: new Date(2019, 0, 9, 3, 15),
-              //   title: "A Suggested meeting time for Group OurTime" 
-              // },
-              
-              
-            ]
+              {
+                start: new Date(2019, 0, 9, 1, 30),
+                end: new Date(2019, 0, 9, 3, 15),
+                title: "A Suggested meeting time for Group OurTime" 
+              },    
+          ]
+            */
           };
     }
 
@@ -55,6 +55,29 @@ class App extends Component {
     onFailure = (error) => {
         alert(error);
     };
+
+
+    getmyFreeTime = () => {
+      
+const myHeaders = new Headers();
+
+myHeaders.append('Content-Type', 'application/json');
+myHeaders.append('Authorization', this.state.token);
+
+fetch('http://localhost:4000/profile/myfreetime', {
+ method: 'GET',
+ headers: myHeaders,
+})
+      .then(function(response) { 
+       return response.json();
+      })
+      .then(function(myJson) {
+        this.stateCal.events = myJson.events;
+      console.log(JSON.stringify(myJson));
+    }
+    );
+  }
+  
 /*
     googleResponse = (response) => {
         const tokenBlob = new Blob([JSON.stringify({access_token: response.accessToken}, null, 2)], {type : 'application/json'});
@@ -193,9 +216,9 @@ class App extends Component {
               placeholder="add something in the database"
               style={{ width: "200px" }}
             />
-            {/* <button onClick={() => this.putDataToDB(this.state.message)}>
-              ADD
-            </button> */}
+            <button onClick={() => console.log(this.state.token)}>
+              LOG TO CONSOLE
+            </button>
           </div>
   
           <div style={{ padding: "10px" }}>

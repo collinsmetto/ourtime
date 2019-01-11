@@ -6,6 +6,37 @@ var sample = require('../modules/sample')
 // const authCheck = (req, res, next) => {
 // router.get('/', authCheck, (req, res) 
 
+// router.get('/auth/response', (req, res) => {
+    router.route('/myfreetime')
+    .get((req, res) => {
+        console.log("in /profile/myfreetime");
+        console.log(req.headers.authorization)
+    
+      var token = req.headers.authorization; //req.body.params.resp|| req.body.token || req.query.token || req.headers['x-auth-token'] ||req.cookies.token;
+      if (!token) {
+          console.log("Token not received");
+       return res.status(401).json({message: "Must pass token"});
+      }
+    // Check token that was passed by decoding token using secret
+     jwt.verify(token, config.googleAuth.clientSecret, function(err, user) {
+        if (err) throw err;
+       //return user using the id from w/in JWTToken
+        User.findOne({
+            email:user.email
+        }, function(err, user) {
+
+           if (err) throw err;
+            res.json({
+                user: user, // return both user and token
+                token: token,
+                events: user.events
+            });
+         });
+      });
+    });
+
+
+
 
 // display my free time (logged in user's free time). 
 router.get('/events/myfreetime', (req, res)=> {

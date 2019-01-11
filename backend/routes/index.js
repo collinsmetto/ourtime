@@ -75,13 +75,8 @@ router.route('/auth/google')
     }, generateToken, sendToken);
 
 
-
-
-
-
 // router.get('/auth/response', (req, res) => {
-router.route('/auth/response')
-.get((req, res) => {
+router.get('/auth/response', (req, res) => {
     console.log("in /auth/response");
     console.log(req.headers.authorization)
 
