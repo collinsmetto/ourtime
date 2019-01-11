@@ -58,24 +58,25 @@ class App extends Component {
 
 
     getmyFreeTime = () => {
-      
-const myHeaders = new Headers();
+            
+      const myHeaders = new Headers();
 
-myHeaders.append('Content-Type', 'application/json');
-myHeaders.append('Authorization', this.state.token);
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append('Authorization', this.state.token);
 
-fetch('http://localhost:4000/profile/myfreetime', {
- method: 'GET',
- headers: myHeaders,
-})
-      .then(function(response) { 
-       return response.json();
+      fetch('http://localhost:4000/profile/myfreetime', {
+      method: 'GET',
+      headers: myHeaders,
       })
-      .then(function(myJson) {
-        this.stateCal.events = myJson.events;
-      console.log(JSON.stringify(myJson));
-    }
-    );
+            .then(function(response) { 
+            return response.json();
+            })
+            .then(function(myJson) {
+              
+            console.log(JSON.stringify(myJson));
+          //  this.stateCal.events = myJson.events;
+          }
+          );
   }
   
 /*
@@ -219,6 +220,10 @@ fetch('http://localhost:4000/profile/myfreetime', {
             <button onClick={() => console.log(this.state.token)}>
               LOG TO CONSOLE
             </button>
+            <button onClick={() => this.getmyFreeTime()}>
+              GET MY FREE TIME
+            </button>
+
           </div>
   
           <div style={{ padding: "10px" }}>

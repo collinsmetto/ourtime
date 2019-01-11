@@ -30,16 +30,14 @@ class LoginPage extends Component {
                     fetch('http://localhost:4000/api/v1/auth/response', {
                     method: 'GET',
                     headers: myHeaders,
+                    })   
+                    .then(function(response) {  
+                    return response.json();
                     })
-                        
-                            .then(function(response) { 
-                            
-                            return response.json();
-                            })
-                            .then(function(myJson) {
-                            console.log(JSON.stringify(myJson));
-                        }
-                        );
+                    .then(function(myJson) {
+                    console.log(JSON.stringify(myJson));
+                    }
+                    );
     }
     
     render() {

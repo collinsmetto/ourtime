@@ -11,6 +11,7 @@ const cookieSession = require('cookie-session'); // added cookie-session
 var session = require('express-session');
 var jwt = require('jsonwebtoken'); // added 
 var index = require('./routes/index');
+var profile = require('./routes/profile-routes');
 const mongoose = require('mongoose');
 
 var app = express();
@@ -41,7 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 /*** */
 app.use('/api/v1/', index);
-
+app.use('/profile', profile);
 // Now we can access req.user so after we will call req.user, if we write it above these, it will always return underfined
 app.use(function(req, res, next){
     res.locals.user = req.user || null

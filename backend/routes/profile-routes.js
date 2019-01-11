@@ -1,11 +1,12 @@
 const router = require('express').Router();
-const User = require('../models/user-model');
-var Group = require('../models/group');
-var sample = require('../modules/sample')
-
+//const User = require('../models/user-model');
+//var Group = require('../models/group');
+//var sample = require('../modules/sample')
+var User = require('mongoose').model('User');
 // const authCheck = (req, res, next) => {
 // router.get('/', authCheck, (req, res) 
-
+var jwt = require('jsonwebtoken'); // added 
+var config = require('../config');
 // router.get('/auth/response', (req, res) => {
     router.route('/myfreetime')
     .get((req, res) => {
@@ -24,7 +25,7 @@ var sample = require('../modules/sample')
         User.findOne({
             email:user.email
         }, function(err, user) {
-
+            console.log(user.events);
            if (err) throw err;
             res.json({
                 user: user, // return both user and token
