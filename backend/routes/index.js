@@ -81,20 +81,11 @@ router.route('/auth/google')
 
 // router.get('/auth/response', (req, res) => {
 router.route('/auth/response')
-.post((req, res) => {
+.get((req, res) => {
     console.log("in /auth/response");
-    console.log(req)
-   // console.log(req.body.params.resp)
-   
-      // return res.json({success: true, data: {"id": "123", "message": "sknfsknfa"}})
-// THE token
-//console.log(req.body.params.resp)
-/*** */
-console.log("not respomdeinfdk")
-  
-/*
-// check header or url parameters or post parameters for token
-  var token = "nsdksl"; //req.body.params.resp|| req.body.token || req.query.token || req.headers['x-auth-token'] ||req.cookies.token;
+    console.log(req.headers.authorization)
+
+  var token = req.headers.authorization; //req.body.params.resp|| req.body.token || req.query.token || req.headers['x-auth-token'] ||req.cookies.token;
   if (!token) {
       console.log("Token not received");
    return res.status(401).json({message: "Must pass token"});
@@ -109,12 +100,12 @@ console.log("not respomdeinfdk")
     email:user.email
     //log(" REACHED THIS POINT IN CODE 97");
     }, function(err, user) {
-      console.log("reached error part of function")
+      //console.log("reached error part of function")
       //console.log(user)
        if (err) throw err;
           //console.log("Reached 104")
           //user = utils.getCleanUser(user); 
-          console.log("Reached 106")
+         // console.log("Reached 106")
 
          //Note: you can renew token by creating new token(i.e. 
          //refresh it)w/ new expiration time at this point, but I’m 
@@ -127,7 +118,6 @@ console.log("not respomdeinfdk")
      });
   });
 
-*/
 
   
 });

@@ -50,28 +50,48 @@ class LoginPage extends Component {
             // 'Content-Type': 'application/json'}
         };
         //console.log(options.headers)
-        console.log(this.state.token)
+        
             /****/
         
        // axios.get("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
-    fetch('http://localhost:4000/api/v1/auth/response', 
-    {
-        method: "POST",
-        body: this.state.token,
-        mode: "cors",
-        cache: "default",
-        params: {resp: this.state.token},
-         headers:{'Accept': 'application/json',
-         'Content-Type': 'application/json'}
-    })
+    // fetch('http://localhost:4000/api/v1/auth/response', 
+    // {
+    //     method: "POST",
+    //     body: this.state.token,
+    //     mode: "cors",
+    //     cache: "default",
+    //     params: {resp: this.state.token},
+    //      headers:{'Accept': 'application/json',
+    //      'Content-Type': 'application/json'}
+    // })
+ const myHeaders = new Headers();
+
+ myHeaders.append('Content-Type', 'application/json');
+ myHeaders.append('Authorization', this.state.token);
+ 
+fetch('http://localhost:4000/api/v1/auth/response', {
+   method: 'GET',
+   headers: myHeaders,
+ })
+    // {
+    //     method: "POST",
+    //     body: this.state.token,
+    //     mode: "cors",
+    //     cache: "default",
+    //     params: {resp: this.state.token},
+    //      headers:{'Accept': 'application/json',
+    //      'Content-Type': 'application/json'}
+    // })
         .then(function(response) { 
-
-
-           //return response.json();
+        //     console.log("token!!!!!!! below")
+        // console.log(this.state.token)
+        //  console.log(response)
+         return response.json();
         })
         .then(function(myJson) {
-            //console.log(JSON.stringify(myJson));
-        });
+        console.log(JSON.stringify(myJson));
+      }
+      );
     }
     
     render() {
