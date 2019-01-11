@@ -24,27 +24,27 @@ class App extends Component {
         this.state = { isAuthenticated: false, user: null, token: this.props.tokenFromLogIn};
         
         this.stateCal = {
-     /*
+     
             events: [
-              {
-                start: new Date(2019, 0, 9, 12, 30),
-                end: new Date(2019, 0, 9, 2, 15),
-                title: "A Suggested meeting time for Group OurTime" 
-              },
+              // {
+              //   start: new Date(2019, 0, 9, 12, 30),
+              //   end: new Date(2019, 0, 9, 2, 15),
+              //   title: "A Suggested meeting time for Group OurTime" 
+              // },
       
-              {
-                start: new Date(2019, 0, 11, 10, 30),
-                end: new Date(2019, 0, 11, 13, 15),
-                title: "A Suggested meeting time for Group OurTime" 
-              },
+              // {
+              //   start: new Date(2019, 0, 11, 10, 30),
+              //   end: new Date(2019, 0, 11, 13, 15),
+              //   title: "A Suggested meeting time for Group OurTime" 
+              // },
 
-              {
-                start: new Date(2019, 0, 9, 1, 30),
-                end: new Date(2019, 0, 9, 3, 15),
-                title: "A Suggested meeting time for Group OurTime" 
-              },    
+              // {
+              //   start: new Date(2019, 0, 9, 1, 30),
+              //   end: new Date(2019, 0, 9, 3, 15),
+              //   title: "A Suggested meeting time for Group OurTime" 
+              // },    
           ]
-            */
+           
           };
     }
 

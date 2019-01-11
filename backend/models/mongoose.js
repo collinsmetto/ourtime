@@ -38,9 +38,9 @@ module.exports = function () {
         }, function(err, user) {
             var google_calendar = new gcal.GoogleCalendar(accessToken);
            
-            google_calendar.events.list({calendarId:'primary', 
-            timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
-            function(err, eventsList) {
+            // google_calendar.events.list({calendarId:'primary', 
+            // timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
+            // function(err, eventsList) {
                     // no user was found, lets create a new one
                     if (!user) {
                         var newUser = new that({
@@ -65,7 +65,7 @@ module.exports = function () {
             } else { // update calendar events
                 return cb(err, user);
             }
-        });
+        // }); calendar brackets 
         });
     };
 
