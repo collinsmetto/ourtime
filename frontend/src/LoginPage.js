@@ -21,22 +21,57 @@ class LoginPage extends Component {
     onFailure = (error) => {
         alert(error);
       }
+      
     
-      getDataFromDb = () => {
+    //   getDataFromDb = () => {
+    //     const options = {
+    //         method: "GET",
+    //         body: this.state.token,
+    //         mode: "cors",
+    //         cache: "default",
+    //         headers:{'Authorization': 'Bearer ${this.state.token}', 'Accept': 'application/json',
+    //         'Content-Type': 'application/json'}
+    //     };
+    //     console.log(options.headers)
+        
+    //         /****/
+    //     //fetch('http://localhost:4000/api/v1/auth/response', options).then(r => { });
+         
+    //     axios.get("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
+    // }
+    getDataFromDb = () => {
         const options = {
             method: "POST",
             body: this.state.token,
             mode: "cors",
             cache: "default",
-            headers:{'Authorization': 'Bearer ${this.state.token}', 'Accept': 'application/json',
-            'Content-Type': 'application/json'}
+            params: {resp: this.state.token},
+            // headers:{'Authorization': 'Bearer ${this.state.token}', 'Accept': 'application/json',
+            // 'Content-Type': 'application/json'}
         };
-        console.log(options.headers)
-        
+        //console.log(options.headers)
+        console.log(this.state.token)
             /****/
-        //fetch('http://localhost:4000/api/v1/auth/response', options).then(r => { });
-         
-        axios.post("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
+        
+       // axios.get("http://localhost:4000/api/v1/auth/response", {params: {resp: this.state.token}}, {header: options});
+    fetch('http://localhost:4000/api/v1/auth/response', 
+    {
+        method: "POST",
+        body: this.state.token,
+        mode: "cors",
+        cache: "default",
+        params: {resp: this.state.token},
+         headers:{'Accept': 'application/json',
+         'Content-Type': 'application/json'}
+    })
+        .then(function(response) { 
+
+
+           //return response.json();
+        })
+        .then(function(myJson) {
+            //console.log(JSON.stringify(myJson));
+        });
     }
     
     render() {

@@ -5,17 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-var app = express();
-
-/*
-app.use(express.static('public'));
-app.use(('./routes/routes'));
-*/
-var app = express();
-
+var passport = require('passport'); // added passport
+var config = require('./config') // added config 
+const cookieSession = require('cookie-session'); // added cookie-session
+var session = require('express-session');
+var jwt = require('jsonwebtoken'); // added 
 var index = require('./routes/index');
+const mongoose = require('mongoose');
 
-//var app = require('express')(); 
+var app = express();
+
 var corsOption = {
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -36,15 +35,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*
-app.listen(4000, function (err) {
-    if (err) { 
-       console.log(err);
-    } else {
-       console.log("App started at port 4000");
-    }    
-});
-*/
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+/*** */
 app.use('/api/v1/', index);
 
+// Now we can access req.user so after we will call req.user, if we write it above these, it will always return underfined
+app.use(function(req, res, next){
+    res.locals.user = req.user || null
+    console.log(req.user)
+    next();
+  })
+
+ 
+
 module.exports = app;
+
+
+
+

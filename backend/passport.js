@@ -1,15 +1,19 @@
 'use strict';
 
-require('./mongoose')();
+require('./models/mongoose')();
+require('./models/userTime')();
 var passport = require('passport');
-//var TwitterTokenStrategy = require('passport-twitter-token');
 var User = require('mongoose').model('User');
-//var FacebookTokenStrategy = require('passport-facebook-token');
+var UserTime = require('mongoose').model('UserTime');
 var GoogleTokenStrategy = require('passport-google-token').Strategy;
 var config = require('./config');
+var gcal = require('google-calendar');
 
-module.exports = function () {
 
+
+// commented out module.exports
+ module.exports = function () {
+   
 
     passport.use(new GoogleTokenStrategy({
             clientID: config.googleAuth.clientID,
@@ -17,8 +21,41 @@ module.exports = function () {
         },
         function (accessToken, refreshToken, profile, done) {
             console.log("passport.js HEREERERERERERER")
-            User.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
+/*
+            var google_calendar = new gcal.GoogleCalendar(accessToken);
+
+            // freebusy test
+            var check = {
+            timeMin: '2019-01-1T13:00:00-05:00',     
+            timeMax:'2019-01-11T15:00:00-05:00',
+            timeZone: 'America/New_York',
+            items: [{id:'collinsmetto@gmail.com'}]
+            }
+        google_calendar.freebusy.query(check, function(err, response){
+               if (err) console.log(err);
+               else  console.log(response);
+           });
+        
+*/      
+ User.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
                 return done(err, user);
-            });
-        }));
-};
+            });   
+            // option 2 
+            // UserTime.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
+            //     return done(err, user);
+            // });
+
+ // end here           
+})
+);
+
+ }
+
+/*
+            // User.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
+            //     return done(err, user);
+            // });
+            // option 2: save calendar events 
+            UserTime.upsertGoogleUser(accessToken, refreshToken, profile, function(err, user) {
+                return done(err, user);
+            }); */

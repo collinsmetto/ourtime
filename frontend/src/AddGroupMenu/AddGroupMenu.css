@@ -1,9 +1,10 @@
 #flyoutMenu {
-    width: 15vw;
+    width: 18vw;
     height: 100vh;
-    background-color: #3f51b5;
+    /* background-color: #3f51b5; */
+    background-color: white;
     position: fixed;
-    top: 11vh;
+    top: 0vh;
     left: 0;
     transition: transform .3s
                 cubic-bezier(0, .52, 0, 1);

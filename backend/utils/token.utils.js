@@ -1,9 +1,14 @@
 var jwt = require('jsonwebtoken');
+var config = require('../config')
+
 
 var createToken = function(auth) {
+    console.log("in token.utils")
+    //console.log(auth)
     return jwt.sign({
-            id: auth.id
-        }, 'my-secret',
+            id: auth.id,
+            email: auth.email
+        }, config.googleAuth.clientSecret, // added my-secret
         {
             expiresIn: 60 * 120
         });
@@ -15,6 +20,7 @@ module.exports = {
       return next();
   },
   sendToken: function(req, res) {
+      
       res.setHeader('x-auth-token', req.token);
       return res.status(200).send(JSON.stringify(req.user));
   }

@@ -25,18 +25,25 @@ class App extends Component {
         this.stateCal = {
      
             events: [
-              
               {
-                start: new Date('2018-12-08T02:00:00-05:00'),
-                end: new Date('2018-12-08T03:00:00-05:00'),
-                title: "Some title" 
+                start: new Date(2019, 0, 9, 12, 30),
+                end: new Date(2019, 0, 9, 2, 15),
+                title: "A Suggested meeting time for Group OurTime" 
               },
       
               {
-              start: new Date(2019, 0, 1, 12, 30),
-              end: new Date(2019, 0, 1, 17, 15),
-              title: "Trial#2"
-              }
+                start: new Date(2019, 0, 11, 10, 30),
+                end: new Date(2019, 0, 11, 13, 15),
+                title: "A Suggested meeting time for Group OurTime" 
+              },
+
+              // {
+              //   start: new Date(2019, 0, 9, 1, 30),
+              //   end: new Date(2019, 0, 9, 3, 15),
+              //   title: "A Suggested meeting time for Group OurTime" 
+              // },
+              
+              
             ]
           };
     }
@@ -186,9 +193,9 @@ class App extends Component {
               placeholder="add something in the database"
               style={{ width: "200px" }}
             />
-            <button onClick={() => this.putDataToDB(this.state.message)}>
+            {/* <button onClick={() => this.putDataToDB(this.state.message)}>
               ADD
-            </button>
+            </button> */}
           </div>
   
           <div style={{ padding: "10px" }}>
@@ -198,9 +205,9 @@ class App extends Component {
               onChange={e => this.setState({ idToDelete: e.target.value })}
               placeholder="put id of item to delete here"
             />
-            <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>
+            {/* <button onClick={() => this.deleteFromDB(this.state.idToDelete)}>
               DELETE
-            </button>
+            </button> */}
           </div>
   
           <div style={{ padding: "10px" }}>
