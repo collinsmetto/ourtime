@@ -11,6 +11,7 @@ import { GoogleLogin } from 'react-google-login';
 import config from './config.json';
 import GroupList from './GroupList.js'
 import GroupItems from './GroupItems.js'
+import Event_Comp from './Event_Comp.js'
 
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -21,33 +22,44 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { isAuthenticated: false, user: null, token: this.props.tokenFromLogIn};
+        this.state = { 
+          isAuthenticated: false, 
+          user: null, 
+          token: this.props.tokenFromLogIn,
+          stateCal: [], 
+          count: 0};
         
-        this.stateCal = {
+        // this.stateCal = {
      
-            events: [
-              // {
-              //   start: new Date(2019, 0, 9, 12, 30),
-              //   end: new Date(2019, 0, 9, 2, 15),
-              //   title: "A Suggested meeting time for Group OurTime" 
-              // },
+        //     events: [
+        //       // {
+        //       //   start: new Date(2019, 0, 9, 12, 30),
+        //       //   end: new Date(2019, 0, 9, 2, 15),
+        //       //   title: "A Suggested meeting time for Group OurTime" 
+        //       // },
       
-              // {
-              //   start: new Date(2019, 0, 11, 10, 30),
-              //   end: new Date(2019, 0, 11, 13, 15),
-              //   title: "A Suggested meeting time for Group OurTime" 
-              // },
+        //       // {
+        //       //   start: new Date(2019, 0, 11, 10, 30),
+        //       //   end: new Date(2019, 0, 11, 13, 15),
+        //       //   title: "A Suggested meeting time for Group OurTime" 
+        //       // },
 
-              // {
-              //   start: new Date(2019, 0, 9, 1, 30),
-              //   end: new Date(2019, 0, 9, 3, 15),
-              //   title: "A Suggested meeting time for Group OurTime" 
-              // },    
-          ]
+        //       // {
+        //       //   start: new Date(2019, 0, 9, 1, 30),
+        //       //   end: new Date(2019, 0, 9, 3, 15),
+        //       //   title: "A Suggested meeting time for Group OurTime" 
+        //       // },    
+        //   ]
            
-          };
+        //   };
     }
-
+  //   myCallback = (dataFromChild) => {
+  //     //[...we will use the dataFromChild here...]
+  //     //this.setState({stateCal:dataFromChild});
+  //     //console.log(this.state.stateCal);
+  //     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!")
+  // }
+ 
     logout = () => {
         this.setState({isAuthenticated: false, token: '', user: null})
     };
@@ -78,6 +90,8 @@ class App extends Component {
           }
           );
   }
+
+  
   
 /*
     googleResponse = (response) => {
@@ -200,7 +214,8 @@ class App extends Component {
                 localizer={localizer}
                 defaultDate={new Date()}
                 defaultView="month"
-                events={this.stateCal.events}
+                events = {[]}
+                //events={this.state.stateCal.events}
                 style={{ height: "80vh" }}
               />
             </div>
@@ -258,6 +273,30 @@ class App extends Component {
             >
             </button>
           </div>
+        {/* <div>
+        <MenuContainer stateCal={this.state.stateCal} someFn={(stateCal) => this.setState({stateCal})}/>
+      </div> */}
+          <div>
+          <Event_Comp stateCal={this.state.stateCal}  getEvents={(stateCal) => this.setState({stateCal})}/>
+          </div>
+          <button onClick={() => console.log(this.state.stateCal)}>Checker of state</button>
+
+
+
+
+        
+          {/* <div>
+            <MenuContainer callbackFromParent={this.myCallback}/>
+          </div>
+          <button
+              callbackFromParent={this.myCallback}
+              onClick={() =>
+                console.log(this.state.stateCal)
+              }
+            > testing child to parent</button> */}
+
+
+
   
         </body>
   

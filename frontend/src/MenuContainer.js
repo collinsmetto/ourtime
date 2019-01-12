@@ -40,6 +40,20 @@ class MenuContainer extends Component {
         e.preventDefault();
       }
 
+    // someFn = () => {
+    //    // [...somewhere in here I define a variable eventsInfo which    I think will be useful as data in my ToDoList component...]
+    //    var eventsInfo = ["Callback Works"] 
+    //     this.props.callbackFromParent(eventsInfo);
+    // }
+    
+    //  someFn = ({count, increaseCount}) => {
+    //     return(
+    //       <button onClick={() => increaseCount(count + 1)}>+</button>
+    //     )
+    //   };
+    
+    
+
     render() {
         // <MenuButton className="New Group"/> <GroupList/>
 
@@ -77,7 +91,6 @@ class MenuContainer extends Component {
                 <br/>
 
                 <RaisedButton type="submit"  variant="contained" color="primary" fullWidth="true"> View All Times</RaisedButton>
-
 
             </div>
         );

@@ -21,15 +21,15 @@ var gcal = require('google-calendar');
         },
         function (accessToken, refreshToken, profile, done) {
             console.log("passport.js  fires functions ...")
-            console.log(accessToken)
+            //console.log(accessToken)
 
             var google_calendar = new gcal.GoogleCalendar(accessToken);
             // events for this user 
             google_calendar.events.list('primary', 
                 {timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
                 function(err, eventsList){
-                     console.log("here\n\n")
-                    console.log(eventsList)
+                    // console.log("here\n\n")
+                    //console.log(eventsList)
                 });
 
 
