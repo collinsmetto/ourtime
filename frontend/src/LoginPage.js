@@ -25,17 +25,17 @@ class LoginPage extends Component {
             const myHeaders = new Headers();
 
                     myHeaders.append('Content-Type', 'application/json');
-                    myHeaders.append('Authorization', this.state.token);
+                    myHeaders.append('Authorization', this.state.token); 
                     
-                    fetch('http://localhost:4000/api/v1/auth/response', {
-                    method: 'GET',
-                    headers: myHeaders,
-                    })   
+                    fetch('http://localhost:4000/profile/response', {
+                        method: 'GET',
+                        headers: myHeaders,
+                    })
                     .then(function(response) {  
-                    return response.json();
+                        return response.json();
                     })
                     .then(function(myJson) {
-                    console.log(JSON.stringify(myJson));
+                        console.log(JSON.stringify(myJson));
                     }
                     );
     }
@@ -75,7 +75,10 @@ class LoginPage extends Component {
                         Log out
                     </button>
                 </div> */}
-                <App tokenFromLogIn = {this.state.token} />
+                <App 
+                    tokenFromLogIn = {this.state.token}
+                    getDataFromDb = {this.getDataFromDb}
+                 />
              
                 <div>
                     <button onClick={this.getDataFromDb} className="button">

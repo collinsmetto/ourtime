@@ -10,14 +10,13 @@ var Schema = mongoose.Schema;
 
 var EventSchema = new Schema ({
 	start: {
-		date: String, // changed this from String 
-		dateTime: String,  // changed this from String 
-		timeZone: String
+		date: Date, // changed this from String 
+		dateTime: Date  // changed this from String 
+		
 	},
 	end: {
-		date: String,
-		dateTime: String,
-		timeZone: String
+		date: Date,
+		dateTime: Date,
 	},
    });
    

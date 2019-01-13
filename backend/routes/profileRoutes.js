@@ -1,13 +1,48 @@
 const router = require('express').Router();
-//const User = require('../models/user-model');
-//var Group = require('../models/group');
-//var sample = require('../modules/sample')
 var User = require('mongoose').model('User');
-// const authCheck = (req, res, next) => {
-// router.get('/', authCheck, (req, res) 
-var jwt = require('jsonwebtoken'); // added 
+var jwt = require('jsonwebtoken'); 
 var config = require('../config');
 var gcal = require('google-calendar');
+
+
+
+/******************************************************************************************/
+
+router.get('/response', (req, res) => {
+        console.log("in /profile/response");
+        console.log(req.headers.authorization)
+
+      var token = req.headers.authorization; 
+      if (!token) {
+          console.log("Token not received");
+       return res.status(401).json({message: "Must pass token"});
+      }
+    // Check token that was passed by decoding token using secret
+     jwt.verify(token, config.googleAuth.clientSecret, function(err, user) {
+
+        if (err) throw err;
+       //return user using the id from w/in JWTToken
+        User.findOne({
+            email:user.email
+
+        }, function(err, user) {
+         console.log(user);
+           if (err) throw err;
+              
+            res.json({
+                user: user, // return both user and token
+                token: token,
+       
+            });
+         });
+      });
+    
+    
+      
+    });
+ 
+/******************************************************************************************/
+
 
 router.route('/myfreetime').get((req, res) => {
         console.log("in /profile/myfreetime NOW");
@@ -41,7 +76,29 @@ router.route('/myfreetime').get((req, res) => {
                 console.log(eventsList)
             });
 
+           /*** */
+          var  sampleEvents =  [
+                  {
+                    start: new Date(2019, 0, 9, 12, 30),
+                    end: new Date(2019, 0, 9, 2, 15),
+                    title: "A Suggested meeting time for Group OurTime" 
+                  },
+          
+                  {
+                    start: new Date(2019, 0, 11, 10, 30),
+                    end: new Date(2019, 0, 11, 13, 15),
+                    title: "A Suggested meeting time for Group OurTime" 
+                  },
+                  {
+                    start: new Date(2019, 0, 13, 10, 30),
+                    end: new Date(2019, 0, 13, 13, 15),
+                    title: "A Suggested meeting time for Group OurTime" 
+                  },
+                ]
+    
 
+
+           /**** */
 
 
             // console.log("hererererer")
@@ -50,7 +107,7 @@ router.route('/myfreetime').get((req, res) => {
             res.json({
                 user: user, // return both user and token
                 token: token,
-                events: user.events,
+                events: sampleEvents,//user.events,
                 here: "pass from route freetime worked"
             });
          });
@@ -58,7 +115,31 @@ router.route('/myfreetime').get((req, res) => {
     });
 
 
+/******************************************************************************************/
 
+
+router.route('/creategroup').get((req, res) => {
+    console.log("in /creategroup NOW");
+    console.log(JSON.stringify(req.headers.group))
+
+ // var token = req.headers.authorization; 
+  //console.log(token);
+
+  
+
+
+        // console.log("hererererer")
+        // console.log(user.events);
+
+        res.json({
+            here: "pass from route freetime worked"
+        });
+     });
+
+
+
+
+/******************************************************************************************/
 
 // display my free time (logged in user's free time). 
 router.get('/events/myfreetime', (req, res)=> {
@@ -72,6 +153,7 @@ router.get('/events/myfreetime', (req, res)=> {
             });
 });
 
+/******************************************************************************************/
 // display logged in users' groups and intersecting times. 
 router.get('/events/mygroups', (req, res) => {
         User.findOne({googleId: req.user.googleId}).then((currentUser) => {
@@ -94,6 +176,8 @@ router.get('/events/mygroups', (req, res) => {
 
 });
 
+/******************************************************************************************/
+
 // display group members and intersecting times
 router.get('/events/viewgroup', (req,res) => {
     Group.findOne({groupName: "Group1"}).then((group) => {
@@ -112,6 +196,8 @@ router.get('/events/viewgroup', (req,res) => {
         }
     });
 });
+
+/******************************************************************************************/
 
 router.get('/events/viewallgroups', (req, res) => {
     User.findOne({googleId: req.user.googleId}).then((currentUser) => {
@@ -136,6 +222,7 @@ router.get('/events/viewallgroups', (req, res) => {
     });
 }); 
 
+/******************************************************************************************/
 
 router.get('/events/creategroup', (req,res) => {
     // receive a form with groupName, and email addresses of users. 
@@ -158,6 +245,7 @@ router.get('/events/creategroup', (req,res) => {
                 });
         }
     });
+
    /*****************************************************************/
 
     // LOOP: search for each user's email, add user to user array in GroupSchema, add user events to group   
@@ -203,7 +291,9 @@ router.get('/events/creategroup', (req,res) => {
 
 
 
-/*****************************************************************/
+/******************************************************************************************/
+
+
 router.get('/events/addmembertogroup', (req,res) => {
     
     var groupName = "Group1"
@@ -228,6 +318,9 @@ router.get('/events/addmembertogroup', (req,res) => {
     res.send("Successfully added member to group");
 });
 
+
+/******************************************************************************************/
+
 // remove self from group, admin remove a member from a group
 router.get('/events/removememberfromgroup', (req,res) => {
 
@@ -249,7 +342,9 @@ router.get('/events/removememberfromgroup', (req,res) => {
     res.send("Successfully removed member from group");
 });
 
-/*****************************************************************/
+/******************************************************************************************/
+
+// HELPER FUNCTIONS 
 function addUserEvents(currentUser) {
        var events = []
         if(currentUser) {
@@ -341,9 +436,8 @@ function removeUserFromGroup(user, groupName){
      });
 }
 function deleteGroup(groupName){}
-/*****************************************************************/     
 
-
+/******************************************************************************************/    
 
 
 

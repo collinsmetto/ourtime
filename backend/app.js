@@ -11,7 +11,7 @@ const cookieSession = require('cookie-session'); // added cookie-session
 var session = require('express-session');
 var jwt = require('jsonwebtoken'); // added 
 var index = require('./routes/index');
-var profile = require('./routes/profile-routes');
+var profile = require('./routes/profileRoutes');
 const mongoose = require('mongoose');
 
 var app = express();

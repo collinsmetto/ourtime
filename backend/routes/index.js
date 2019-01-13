@@ -5,7 +5,7 @@ var passport = require('passport');
 var config = require('../config');
 var request = require('request');
 require('../passport')();// removed ();
-var jwt = require('jsonwebtoken'); // added 
+var jwt = require('jsonwebtoken'); 
 var User = require('mongoose').model('User');
 var nodemailer = require('nodemailer');
 const creds = require('../config/config');
@@ -63,9 +63,7 @@ router.route('/auth/google')
       //console.log(req.user)  
       if (!req.user) {
             return res.send(401, 'User Not Authenticated');
-        }
-       
-        
+        }  
         req.auth = {
             id: req.user.id, 
             email: req.user.email
@@ -75,48 +73,6 @@ router.route('/auth/google')
     }, generateToken, sendToken);
 
 
-// router.get('/auth/response', (req, res) => {
-router.get('/auth/response', (req, res) => {
-    console.log("in /auth/response");
-    console.log(req.headers.authorization)
-
-  var token = req.headers.authorization; //req.body.params.resp|| req.body.token || req.query.token || req.headers['x-auth-token'] ||req.cookies.token;
-  if (!token) {
-      console.log("Token not received");
-   return res.status(401).json({message: "Must pass token"});
-  }
-// Check token that was passed by decoding token using secret
- jwt.verify(token, config.googleAuth.clientSecret, function(err, user) {
-   //console.log(user.email)
-   //console.log(user.id)
-    if (err) throw err;
-   //return user using the id from w/in JWTToken
-    User.findOne({
-    email:user.email
-    //log(" REACHED THIS POINT IN CODE 97");
-    }, function(err, user) {
-      //console.log("reached error part of function")
-      //console.log(user)
-       if (err) throw err;
-          //console.log("Reached 104")
-          //user = utils.getCleanUser(user); 
-         // console.log("Reached 106")
-
-         //Note: you can renew token by creating new token(i.e. 
-         //refresh it)w/ new expiration time at this point, but I’m 
-         //passing the old token back.
-         // var token = utils.generateToken(user);
-        res.json({
-            user: user, // return both user and token
-            token: token
-        });
-     });
-  });
-
-
-  
-});
-/**** */
 
 
 

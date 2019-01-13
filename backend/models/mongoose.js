@@ -30,34 +30,16 @@ module.exports = function () {
 
     UserSchema.set('toJSON', {getters: true, virtuals: true});
 
-    UserSchema.statics.upsertGoogleUser = function(accessToken, refreshToken, profile, cb) {
+    UserSchema.statics.upsertGoogleUser = function(accessToken, refreshToken, profile,freeBusyList, cb) {
+       console.log("in mongoose")
+       //console.log(freeBusyList.calendars.primary.busy)
+      
         var that = this;
 
         return this.findOne({
             'googleProvider.id': profile.id
         }, function(err, user) {
 
-            
-
-            var sampleEvents = [
-                    {
-                        start: new Date(2019, 0, 9, 12, 30),
-                        end: new Date(2019, 0, 9, 2, 15),
-                        title: "A Suggested meeting time for Group OurTime" 
-                    },
-            
-                    {
-                        start: new Date(2019, 0, 11, 10, 30),
-                        end: new Date(2019, 0, 11, 13, 15),
-                        title: "A Suggested meeting time for Group OurTime" 
-                    },
-
-                    {
-                        start: new Date(2019, 0, 9, 1, 30),
-                        end: new Date(2019, 0, 9, 3, 15),
-                        title: "A Suggested meeting time for Group OurTime" 
-                    }
-                ]
            
                     // no user was found, lets create a new one
                     if (!user) {
@@ -66,7 +48,7 @@ module.exports = function () {
                             googleId: profile.id,
                             fullName: profile.displayName,
                             email: profile.emails[0].value,
-                            events: sampleEvents, //eventsList.items,
+                            events: freeBusyList.calendars.primary.busy,
                             googleProvider: {
                                 id: profile.id,
                                 token: accessToken
@@ -82,6 +64,14 @@ module.exports = function () {
                
 
             } else { // update calendar events
+                that.updateOne(
+                    {googleId: profile.id},
+                    {$set: {events:  freeBusyList.calendars.primary.busy,}},
+                    {new: true, runValidators: true}).then(doc => {
+                        console.log("Success updating user events")}).catch(err => {
+                            console.error(err);
+                        });  
+            
                 return cb(err, user);
             }
        
