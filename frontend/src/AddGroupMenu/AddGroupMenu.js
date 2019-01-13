@@ -4,8 +4,136 @@ import RaisedButton from "@material-ui/core/Button";
 import Input from '@material-ui/core/TextField';
 
 class AddGroupMenu extends Component {
+
+    /* // Test of edit group functions; Would be put in child component
+    var testName = "test";
+
+    var groupMembers = "hello, moto, how, are, you";
+    var testEmails = new Set(groupMembers.replace(/\s+/g, '').split(","));
+    
+    var testID = 21;
+
+    console.log("Empty group: " + this.state.groups);
+
+    this.addGroup(testName, testEmails, testID);
+    console.log("New group: " + this.state.groups);
+
+    this.updateGroup(this.state.groups.testID, 
+      new Set(["hello", "I", "am"]), new Set());
+    console.log("Should be: hello moto how are you I am. \n Is: " + this.state.groups)
+
+    this.updateGroup(this.state.groups.testID,
+      new Set(), new Set(["apples", "hello", "I", "am"]));
+    console.log("Should be: moto how are you. \n Is: " + this.state.groups)
+
+    this.deleteGroup(testID);
+    console.log("Groups deleted:" + this.state.groups);
+    */
+
+   constructor(props, context) {
+    super(props, context);
+    
+    this.state = {
+        createGroupName: '',
+        createGroupEmails: new Set(),
+
+        deleteGroupID: '',
+
+        updateGroupID: '',
+        updateGroupAdd: new Set(),
+        updateGroupRemove: new Set()
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.submitCreateGroup = this.submitCreateGroup.bind(this);
+    this.submitDeleteGroup = this.submitDeleteGroup.bind(this);
+    this.submitUpdateGroup = this.submitUpdateGroup.bind(this);
+
+    this.createGroup = this.createGroup.bind(this);
+    this.deleteGroup = this.deleteGroup.bind(this);
+    this.updateGroup = this.updateGroup.bind(this);
+    }
+
+    handleChange(e) {
+        if (e.target.isSet)
+            this.setState({[e.target.name]:
+                new Set(e.target.value.replace(/\s+/g, '').split(","))});
+        else
+            this.setState({ [e.target.name]: e.target.value})
+    }
+
+    createGroup(groupName, groupEmails, groupID) {
+        const { createGroup } = this.props;
+
+        //console.log(createNewGroup);
+        
+        createGroup(groupName, groupEmails, groupID);
+    }
+
+    submitCreateGroup(e) {
+        e.preventDefault();
+
+        const { createGroupName } = this.state;
+        const { createGroupEmails } = this.state;
+        //const { createGroup } = this.props;
+
+        console.log(createGroupName);
+        console.log(createGroupEmails);
+
+        const groupID = Date.now();
+        if (typeof this.createGroup == 'function' )
+            this.createGroup(createGroupName, createGroupEmails, groupID);
+        else 
+            console.log('createNewGroup not a function??');
+
+        this.setState({ createGroupName: '', createGroupEmails: '' });
+    }
+
+    deleteGroup(groupID) {
+        const { deleteGroup } = this.props;
+
+        //console.log(createNewGroup);
+        
+        deleteGroup(groupID);
+    }
+
+    submitDeleteGroup(e) {
+        e.preventDefault();
+
+        const { deleteGroupID } = this.state;
+
+        //const { deleteGroup } = this.props;
+
+        this.deleteGroup(deleteGroupID);
+
+        this.setState({ deleteGroupID: ''})
+    }
+
+    updateGroup(groupID, newMembers, oldMembers) {
+        const { updateGroup } = this.props;
+
+        //console.log(createNewGroup);
+        
+        updateGroup(groupID, newMembers, oldMembers);
+    }
+
+    submitUpdateGroup(e) {
+        e.preventDefault();
+
+        const { updateGroupID } = this.state;
+        const { updateGroupAdd } = this.state;
+        const { updateGroupRemove } = this.state;
+
+        //const { updateGroup } = this.props;
+
+        this.updateGroup(updateGroupID, 
+            updateGroupAdd, updateGroupRemove);
+
+        this.setState({ updateGroupID: '', updateGroupAdd: '', updateGroupRemove: ''});
+    }
+
     render() {
-        console.log("Rendering: Menu");
+        //console.log("Rendering: Menu");
         var visibility = "hide";
 
         if (this.props.menuVisibility) {
@@ -13,20 +141,16 @@ class AddGroupMenu extends Component {
         }
 
         var data = this.props.currData;
-        let putDataToDB = this.props.addGroupToDB;
-        let deleteFromDB = this.props.deleteGroupFromDB;
-        let updateDB = this.props.updateGroupInDB;
 
         return (
             <div id="flyoutMenu" 
                 //onMouseDown={this.props.handleMouseDown}
                 className={visibility}>
 
-                    <RaisedButton 
-                        variant="contained" color="primary" fullWidth="true"
-                        onClick={this.props.handleMousesDown}> Exit
-                    </RaisedButton>
-                           
+                <RaisedButton 
+                    variant="contained" color="primary" fullWidth="true"
+                    onClick={this.props.handleMousesDown}> Exit
+                </RaisedButton>
                 {/* <ul>
                 {data.length <= 0
                     ? "NO DB ENTRIES YET"
@@ -39,71 +163,90 @@ class AddGroupMenu extends Component {
                     ))}
                 </ul> */}
 
-                <div style={{ padding: "10px" }}
-                >
-                <form>
-                <Input
-                    type="text"
-                    onChange={e => this.setState({ message: e.target.value })}
-                    label="Group Nickname"
-                    //style={{ width: "200px" }}
-                    fullWidth="true"
-                    inputRef={(a) => this._inputElement = a}
-                />
-                <Input
-                    type="text"
-                    onChange={e => this.setState({ message: e.target.value })}
-                    label="Emails"
-                    helperText="Ex: email1@gmail.com, email2@gmail.com"
-                    fullWidth="true"
-                    inputRef={(a) => this._inputElement = a}
-                />
-                <RaisedButton 
-                    fullWidth="true"
-                    onClick={() => putDataToDB(this.state.message)}>
-                    Add
-                </RaisedButton>
+                <div style={{ padding: "10px" }}>
+                    <form onSubmit={this.submitCreateGroup}>
+                    <Input
+                        type="text"
+                        name="createGroupName"
+                        isSet={false}
+                        onChange={this.handleChange}
+                        label="Group Nickname"
+                        //style={{ width: "200px" }}
+                        fullWidth="true"
+                        // inputRef={(a) => this._inputElement = a}
+                    />
+                    <Input
+                        type="text"
+                        name="createGroupEmails"
+                        isSet={true}
+                        onChange={this.handleChange}
+                        label="Emails"
+                        helperText="Ex: email1@gmail.com, email2@gmail.com"
+                        fullWidth="true"
+                        // inputRef={(a) => this._inputElement = a}
+                    />
 
-                </form>
+
+                    <RaisedButton 
+                        fullWidth="true"
+                        type="submit">
+                        Create Group
+                    </RaisedButton>
+                    </form>
                 </div>
 
                 <div style={{ padding: "10px" }}>
-                <form>
-                <Input
-                    type="text"
-                    fullWidth="true"
-                    onChange={e => this.setState({ idToDelete: e.target.value })}
-                    label="Group ID"
-                />
-                <RaisedButton fullWidth="true" onClick={() => deleteFromDB(this.state.idToDelete)}>
-                    Delete
-                </RaisedButton>
-                </form>
+                    <form>
+                    <Input
+                        type="text"
+                        name="deleteGroupID"
+                        isSet={false}
+                        fullWidth="true"
+                        onChange={this.handleChange}
+                        label="Group ID"
+                    />
+                    <RaisedButton 
+                        fullWidth="true" 
+                        //onClick={() => deleteGroup(this.state.deleteGroupID)}
+                        >
+                        Delete Group
+                    </RaisedButton>
+                    </form>
                 </div>
 
                 <div style={{ padding: "10px" }}>
-                <form>
-                <Input
-                    type="text"
-                    fullWidth="true"
-                    onChange={e => this.setState({ idToUpdate: e.target.value })}
-                    label="Group ID"
-                />
-                <Input
-                    type="text"
-                    fullWidth="true"
-                    onChange={e => this.setState({ updateToApply: e.target.value })}
-                    label="Member Emails"
-                />
-                <RaisedButton
-                    fullWidth="true"
-                    onClick={() =>
-                    updateDB(this.state.idToUpdate, this.state.updateToApply)
-                    }
-                > Update
-                </RaisedButton>
-                </form>
-            </div>
+                    <form>
+                    <Input
+                        type="text"
+                        name="updateGroupID"
+                        isSet={false}
+                        fullWidth="true"
+                        onChange={this.handleChange}
+                        label="Group ID"
+                    />
+                    <Input
+                        type="text"
+                        name="updateGroupAdd"
+                        isSet={true}
+                        fullWidth="true"
+                        onChange={this.handleChange}
+                        label="Add Members"
+                    />
+                    <Input
+                        type="text"
+                        name="updateGroupRemove"
+                        isSet={true}
+                        fullWidth="true"
+                        onChange={this.handleChange}
+                        label="Remove Members"
+                    />
+                    <RaisedButton
+                        fullWidth="true"
+                        //onClick={}
+                    > Update Existing Group
+                    </RaisedButton>
+                    </form>
+                </div>
             </div>
         );
     }

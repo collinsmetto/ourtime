@@ -23,11 +23,13 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-          isAuthenticated: false, 
-          user: null, 
+          isAuthenticated: false,  //TO BE PLACED IN LOGINPAGE.JS
+          user: null, // TO BE DEFINED IN LOGINPAGE.JS
           token: this.props.tokenFromLogIn,
           stateCal: [], 
-          count: 0};
+          count: 0,
+          groups: {}
+          };
         
         // this.stateCal = {
      
@@ -52,6 +54,9 @@ class App extends Component {
         //   ]
            
         //   };
+        this.createGroup = this.createGroup.bind(this);
+        this.deleteGroup = this.deleteGroup.bind(this);
+        this.updateGroup = this.updateGroup.bind(this);
     }
   //   myCallback = (dataFromChild) => {
   //     //[...we will use the dataFromChild here...]
@@ -60,6 +65,7 @@ class App extends Component {
   //     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!")
   // }
  
+    // TO BE DEFINED IN LOGINPAGE.JS
     logout = () => {
         this.setState({isAuthenticated: false, token: '', user: null})
     };
@@ -89,7 +95,7 @@ class App extends Component {
           //  this.stateCal.events = myJson.events;
           }
           );
-  }
+    }
 
   
   
@@ -133,12 +139,62 @@ class App extends Component {
   };
   
   */
-  
+
+  /* Changes state of groups 
+    ADD: Adds group given group nickname and a Set object of emails
+    DELETE: Deletes group given groupID
+    UPDATE: Updates group members given groupID, a Set object of
+            emails to delete, and a Set object of emails to add */
+    
+    createGroup = (groupName, groupEmails, groupID) => {
+      //groupID = ; // NEED TO SET TO UNIQUE NUMBER NOT IN APP (perhaps hashing of group name?)
+      // id = Date.now()
+      //groupEmails = new Set(groupEmails.replace(/\s+/g, '').split(","));
+
+      var newGroup = {
+        name: groupName, 
+        emails: groupEmails, 
+        ID: groupID
+      };
+      
+      var currGroups = this.state.groups;
+      currGroups[groupID] = newGroup;
+      this.setState({groups: currGroups});
+
+      console.log(this.state.groups);
+    }
+
+    deleteGroup = (groupID) => {
+      var filteredGroups = this.state.groups;
+      delete filteredGroups[groupID];
+      
+      this.setState({groups: filteredGroups});
+      console.log(this.state.groups);
+    }
+
+    // newMembers and oldMembers are list
+    updateGroup = (groupID, newMembers, oldMembers) => {
+
+      var updatedGroups = this.state.groups;
+      console.log(updatedGroups[groupID] == true);
+      if (updatedGroups[groupID])
+      {
+        console.log("Yup");
+        for (var member of newMembers)
+          updatedGroups[groupID].emails.add(member);
+        for (var member of oldMembers)
+          updatedGroups[groupID].emails.delete(member);
+      }
+      console.log(this.state.groups);
+    }
+
+
   // here is our UI
   // it is easy to understand their functions when you 
   // see them render into our screen
   render() {
     const { data } = this.state;
+
 
     // our put method that uses our backend api
     // to create new query into our data base
@@ -190,8 +246,6 @@ class App extends Component {
       });
     };
 
-
-
     
     return (
         <div>
@@ -203,12 +257,13 @@ class App extends Component {
           <div className="row">
             <div className="column menu">
               <MenuContainer 
-                addGroupToDB={putDataToDB}
-                deleteGroupFromDB={deleteFromDB}
-                updateGroupInDB={updateDB}
+                createGroup={this.createGroup}
+                deleteGroup={this.deleteGroup}
+                updateGroup={this.updateGroup}
+                onSubmit={this.onGroupFormSubmit}
               />
             </div>
-        
+
             <div className="column calendar">
               <Calendar
                 localizer={localizer}

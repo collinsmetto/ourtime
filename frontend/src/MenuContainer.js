@@ -16,29 +16,30 @@ class MenuContainer extends Component {
           groups: []
         };
 
-        this.addGroup = this.addGroup.bind(this);
       }
 
-      addGroup(e){
-        if (this._inputElement.value !== "")
-        {
-            var newGroup = {
-                groupName: this._inputElement.value
-            };
+    //   addGroup(e){
+    //     if (this._inputElement.value !== "")
+    //     {
+    //         var newGroup = {
+    //             groupName: this._inputElement.value
+    //         };
 
-            this.setState((prevState) => {
-                return {
-                    groups: prevState.groups.concat(newGroup)
-                };
-            });
+    //         this.setState((prevState) => {
+    //             return {
+    //                 groups: prevState.groups.concat(newGroup)
+    //             };
+    //         });
 
-            this._inputElement.value = "";
-        }
+    //         this._inputElement.value = "";
+    //     }
 
-        console.log(this.state.groups);
+        
 
-        e.preventDefault();
-      }
+    //     console.log(this.state.groups);
+
+    //     e.preventDefault();
+    //   }
 
     // someFn = () => {
     //    // [...somewhere in here I define a variable eventsInfo which    I think will be useful as data in my ToDoList component...]
@@ -63,9 +64,9 @@ class MenuContainer extends Component {
                 <br/>
                 <AddGroupMenuContainer
                 data={this.props.currData}
-                putDataToDB={this.props.addGroupToDB}
-                deleteFromDB={this.props.deleteGroupFromDB}
-                updateDB={this.props.updateGroupInDB}
+                createGroup={this.props.createGroup}
+                deleteGroup={this.props.deleteGroup}
+                updateGroup={this.props.updateGroup}
                 />
 
                 

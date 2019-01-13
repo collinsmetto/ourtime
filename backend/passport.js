@@ -21,7 +21,7 @@ var gcal = require('google-calendar');
         },
         function (accessToken, refreshToken, profile, done) {
             console.log("passport.js  fires functions ...")
-            //console.log(accessToken)
+            console.log(accessToken)
 
             var google_calendar = new gcal.GoogleCalendar(accessToken);
             // events for this user 

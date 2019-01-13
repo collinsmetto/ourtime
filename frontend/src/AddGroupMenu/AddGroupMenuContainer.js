@@ -14,6 +14,7 @@ class AddGroupMenuContainer extends Component {
 
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.toggleMenu = this.toggleMenu.bind(this);
+
     }
 
     handleMouseDown(e) {
@@ -40,15 +41,16 @@ class AddGroupMenuContainer extends Component {
 
     render() {
         var data = this.props.data;
+
         return (
             <div>
             
             <AddGroupMenu handleMousesDown={this.handleMouseDown}
                   menuVisibility={this.state.visible}
                   currData={this.props.data}
-                  addGroupToDB={this.props.putDataToDB}
-                  deleteGroupFromDB={this.props.deleteFromDB}
-                  updateGroupInDB={this.props.updateDB}/>
+                  createGroup={this.props.createGroup}
+                  deleteGroup={this.props.deleteGroup}
+                  updateGroup={this.props.updateGroup}/>
 
             <form onSubmit={this.handleMouseDown}>
             <RaisedButton 

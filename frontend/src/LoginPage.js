@@ -99,8 +99,8 @@ class LoginPage extends Component {
             <div id="loginButton">
                 <GoogleLogin
                     className="loginButton"
-                    clientId="970607326037-b35kqjosvjh86iqhrkpogg49v7d9ld1p.apps.googleusercontent.com"
-                    scopes = 'email profile https://www.googleapis.com/auth/calendar'
+                    clientId="638468978131-3h0pn864qjf12p11vjig3lr27qpondnf.apps.googleusercontent.com"
+                    scope = "email profile https://www.googleapis.com/auth/calendar"
                     buttonText="Login"
                     onSuccess={googleResponse}
                     onFailure={googleResponse}
