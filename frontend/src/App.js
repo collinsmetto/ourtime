@@ -93,7 +93,7 @@ class App extends Component {
   }
 
   viewAllGroups = () => {
-    //console.log("Call to view all groups");
+    console.log("Call to view all groups");
     var allGroupTimes = new Set();
     // for (var group in this.state.groups) {
     //   if (group.events)
@@ -124,14 +124,14 @@ class App extends Component {
     let allGroupTimesArray = [];
     
     allGroupTimes.forEach(v => allGroupTimesArray.push(v));
-    //console.log("Ideal calendar state", allGroupTimesArray);
+    console.log("Ideal calendar state", allGroupTimesArray);
 
     this.setState({
       stateCalAllGroups: allGroupTimesArray,
       isSingleGroup: false
     });
 
-    //console.log("Current Calendar State", this.state.stateCalAllGroups, this.state.isSingleGroup);
+    console.log("Current Calendar State", this.state.stateCalAllGroups, this.state.isSingleGroup);
 
   }
   
@@ -179,7 +179,7 @@ class App extends Component {
         
             //console.log("Prior to adding new group", this.state.groups);
 
-            var events = [
+            var events = (groupName === "Yerr") ? ([
               {
                 start: new Date('2018-12-08T02:00:00-05:00'),
                 end: new Date('2018-12-08T03:00:00-05:00'),
@@ -191,7 +191,11 @@ class App extends Component {
               end: new Date(2019, 0, 1, 17, 15),
               title: "Trial#2"
               }
-            ];
+            ]) : ([{
+              start: new Date('2019-02-08T02:00:00-05:00'),
+              end: new Date('2019-02-08T03:00:00-05:00'),
+              title: "Some title" 
+            }]);
 
             var newGroup = {
               name: groupName, 
@@ -205,8 +209,7 @@ class App extends Component {
             // console.log("New group: ", currGroups[groupID].events);
             this.setState({groups: currGroups});
 
-            // console.log("Current state info: " + groupID + 
-            //             " " + this.state.groups);
+            console.log("Added this group: " + groupID, this.state.groups);
         }.bind(this)
     );
   }
@@ -320,7 +323,7 @@ class App extends Component {
                 defaultDate={new Date()}
                 defaultView="month"
                 //events = {[]}
-                events={this.state.isSingleGroup ? this.state.stateCalAllGroups : this.state.stateCalSingleGroup}
+                events={this.state.isSingleGroup ? this.state.stateCalSingleGroup : this.state.stateCalAllGroups}
                 style={{ height: "80vh" }}
               />
             </div>
