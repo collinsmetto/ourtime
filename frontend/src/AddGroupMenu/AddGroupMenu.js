@@ -78,13 +78,13 @@ class AddGroupMenu extends Component {
         const { createGroupName } = this.state;
         const { createGroupEmails } = this.state;
 
-        if ((createGroupName != "") & (createGroupEmails != "")) {
+        if ((createGroupName !== "") & (createGroupEmails !== "")) {
 
         //console.log(createGroupName);
         //console.log(createGroupEmails);
 
         const groupID = Date.now();
-        if (typeof this.createGroup == 'function' )
+        if (typeof this.createGroup === 'function' )
             this.createGroup(createGroupName, createGroupEmails, groupID);
         else 
             console.log('createNewGroup not a function??');
@@ -130,7 +130,7 @@ class AddGroupMenu extends Component {
 
         //const { updateGroup } = this.props;
 
-        if((updateGroupID != "") & ((updateGroupAdd != "") | (updateGroupRemove != ""))){
+        if((updateGroupID !== "") & ((updateGroupAdd !== "") | (updateGroupRemove !== ""))){
             this.updateGroup(updateGroupID, 
                 updateGroupAdd, updateGroupRemove);
 
@@ -146,7 +146,7 @@ class AddGroupMenu extends Component {
             visibility="show";
         }
 
-        var data = this.props.currData;
+        // var data = this.props.currData;
 
         return (
             <div id="flyoutMenu" 

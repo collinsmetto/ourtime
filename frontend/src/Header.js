@@ -6,13 +6,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 // import MenuIcon from '@material-ui/icons/Menu';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+// import Switch from '@material-ui/core/Switch';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 //import LoginPage from './LoginPage';
-import {GoogleLogin, GoogleLogout} from 'react-google-login';
+// import {GoogleLogin, GoogleLogout} from 'react-google-login';
 
 const styles = {
   root: {
@@ -51,9 +51,9 @@ class Header extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
-    const responseGoogle = (response) => {
-      console.log(response);
-    }
+    // const responseGoogle = (response) => {
+    //   console.log(response);
+    // }
 
     return (
       <div className={classes.root}>

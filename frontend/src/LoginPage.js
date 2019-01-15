@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import {GoogleLogin} from 'react-google-login';
 import "./LoginPage.css";
 import "./ContactForm";
-import axios from "axios";
+//import axios from "axios";
 import App from "./App";
 import ContactForm from "./ContactForm";
 
@@ -54,8 +54,10 @@ class LoginPage extends Component {
                 console.log(token);
                 r.json().then(user => {
                     if (token) {
-                        this.setState({isAuthenticated: true, user, token})
+                        this.setState({isAuthenticated: true, user, token});
+                        console.log(this.state.isAuthenticated);
                     }
+                    else console.log("Token does not exist?: " + this.state.isAuthenticated);
                 });
             })
         };
