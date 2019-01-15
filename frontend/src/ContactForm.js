@@ -7,14 +7,12 @@ class ContactForm extends Component{
         e.preventDefault();
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
-        const message = document.getElementById('message').value;
         axios({
             method: "POST", 
             url:"http://localhost:4000/api/v1/send", 
             data: {
                 name: name,   
                 email: email,  
-                messsage: message
             }
         }).then((response)=>{
             if (response.data.msg === 'success'){
@@ -42,10 +40,10 @@ class ContactForm extends Component{
                         <label for="exampleInputEmail1">Email address</label>
                         <input type="email" className="form-control" id="email" aria-describedby="emailHelp" />
                     </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label for="message">Message</label>
                         <textarea className="form-control" rows="5" id="message"></textarea>
-                    </div>
+                    </div> */}
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div>

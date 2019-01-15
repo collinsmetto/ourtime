@@ -33,8 +33,10 @@ var transport = {
 router.post('/send', (req, res, next) => {
     var name = req.body.name
     var email = req.body.email
-    var message = req.body.message
-    var content = `name: ${name} \n email: ${email} \n message: ${message} `
+    var message = `Hello ${name}! \n \t You have been invited to use the OurTime meeting scheduling app. OurTime saves you time! By automatically keeping track of your group's free unscheduled time, we can display when your team is ready to meet. Get started today at: https://ourtime-meetup.herokuapp.com ! \n 
+    All the best, \n
+    \t The Entire OurTime Team`
+    //var content = `name: ${name} \n email: ${email} \n message: ${message} `
   
     var mail = {
       from: name,
