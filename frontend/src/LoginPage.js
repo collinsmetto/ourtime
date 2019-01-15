@@ -51,6 +51,7 @@ class LoginPage extends Component {
                 mode: 'cors',
                 cache: 'default'
             };
+            console.log("GRESPONSE!!!!")
             fetch('http://localhost:4000/api/v1/auth/google', options).then(r => {
                 //console.log("Fetch is called successfully", r);
                 const token = r.headers.get('x-auth-token');
@@ -58,6 +59,7 @@ class LoginPage extends Component {
                 r.json().then(user => {
                     if (token) {
                         this.setState({isAuthenticated: true, user, token});
+                        console.log(token)
                         //console.log("Token: ", token);
                     }
                     //else console.log("Token does not exist?: " + this.state.isAuthenticated);
