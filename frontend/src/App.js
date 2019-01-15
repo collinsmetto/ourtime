@@ -158,7 +158,9 @@ class App extends Component {
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('Authorization', this.state.token);
-    myHeaders.append('group', newGroup.name)
+    myHeaders.append('groupid', newGroup.ID)
+    myHeaders.append('groupname', newGroup.name)
+    myHeaders.append('groupemails', newGroup.emails)
     
       fetch('http://localhost:4000/profile/creategroup', {
             method: 'GET',
@@ -168,7 +170,7 @@ class App extends Component {
             return response.json();
         })
         .then(function(myJson) {
-            //console.log(JSON.stringify(myJson));
+            console.log(JSON.stringify(myJson)); ///* myJson consists of a group: groupName,groupId,users, invalidUsers,events,freetimes*/
             this.setState({dbInfo: myJson.here}); 
             // Get events of group from database
             //newGroup.events = myJson.events;
@@ -209,13 +211,41 @@ class App extends Component {
     );
   }
 
+
   deleteGroup = (groupID) => {
     var filteredGroups = this.state.groups;
     delete filteredGroups[groupID];
     
     this.setState({groups: filteredGroups});
     //console.log(this.state.groups);
+    //console.log("djsandkajsndkas", groupID)
+
+    /**********/
+        // send data to database
+        const myHeaders = new Headers();
+
+        myHeaders.append('Content-Type', 'application/json');
+        myHeaders.append('Authorization', this.state.token);
+        myHeaders.append('groupid', groupID)
+        
+          fetch('http://localhost:4000/profile/deletegroup', {
+                method: 'GET',
+                headers: myHeaders,
+            })
+            .then(function(response) {  
+                return response.json();
+            })
+            .then(function(myJson) {
+                console.log(JSON.stringify(myJson));
+                this.setState({dbInfo: myJson.here}); 
+            }.bind(this)
+        );
+    /*************/
+
+
+
   }
+
 
   // newMembers and oldMembers are list
   updateGroup = (groupID, newMembers, oldMembers) => {
@@ -230,34 +260,31 @@ class App extends Component {
       for (var member of oldMembers)
         updatedGroups[groupID].emails.delete(member);
     }
-    //console.log(this.state.groups);
-        
+    // send data to database
+    const myHeaders = new Headers();
+
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('Authorization', this.state.token);
+    myHeaders.append('groupid', groupID)
+    myHeaders.append('oldgroupmembers', oldMembers)
+    myHeaders.append('newgroupmembers', newMembers)
+
+      fetch('http://localhost:4000/profile/updategroup', {
+            method: 'GET',
+            headers: myHeaders,
+        })
+        .then(function(response) {  
+            return response.json();
+        })
+        .then(function(myJson) {
+            console.log(JSON.stringify(myJson));
+            this.setState({dbInfo: myJson.here}); 
+            console.log("Current state info: " + this.state.dbInfo);
+        }.bind(this)
+    );
   }
 
-  // List of additional 
-  // updateDB(info, ) {
-  //   this.state.stateCal = this.props.getDataFromDb
-  //   // send data to database
-  //   const myHeaders = new Headers();
 
-  //   myHeaders.append('Content-Type', 'application/json');
-  //   myHeaders.append('Authorization', this.state.token);
-  //   myHeaders.append('group', newGroup.name)
-    
-  //     fetch('http://localhost:4000/profile/creategroup', {
-  //           method: 'GET',
-  //           headers: myHeaders,
-  //       })
-  //       .then(function(response) {  
-  //           return response.json();
-  //       })
-  //       .then(function(myJson) {
-  //           console.lo g(JSON.stringify(myJson));
-            
-  //       }
-  //   );
-
-  // }
     
 
 

@@ -78,7 +78,7 @@ class AddGroupMenu extends Component {
         const { createGroupName } = this.state;
         const { createGroupEmails } = this.state;
 
-        if (createGroupName & createGroupEmails) {
+        if (createGroupName != "" & createGroupEmails != "") {
 
         //console.log(createGroupName);
         //console.log(createGroupEmails);
@@ -130,7 +130,7 @@ class AddGroupMenu extends Component {
 
         //const { updateGroup } = this.props;
 
-        if(updateGroupID & (updateGroupAdd | updateGroupRemove)){
+        if(updateGroupID != "" & (updateGroupAdd != "" | updateGroupRemove != "")){
             this.updateGroup(updateGroupID, 
                 updateGroupAdd, updateGroupRemove);
 

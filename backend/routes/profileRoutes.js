@@ -3,7 +3,9 @@ var User = require('mongoose').model('User');
 var jwt = require('jsonwebtoken'); 
 var config = require('../config');
 var gcal = require('google-calendar');
-
+//var Group = require('../models/group');
+require('../models/groupMongoose')();
+var Group = require('mongoose').model('Group');
 
 
 /******************************************************************************************/
@@ -63,39 +65,7 @@ router.route('/myfreetime').get((req, res) => {
         }, function(err, user) {
            console.log("hererererererererer");
            console.log(user.googleProvider.token)
-            
-            
-            console.log("///////////////////////////////////// \n\n")
-            var google_calendar = new gcal.GoogleCalendar(user.googleProvider.token);
-            console.log(google_calendar.events)
-            // events for this user 
-            google_calendar.events.list('primary', 
-            {timeMin: (new Date()).toISOString(), singleEvents:true, orderBy:'startTime'}, 
-            function(err, eventsList){
-                console.log("here\n\n")
-                console.log(eventsList)
-            });
 
-           /*** */
-          var  sampleEvents =  [
-                  {
-                    start: new Date(2019, 0, 9, 12, 30),
-                    end: new Date(2019, 0, 9, 2, 15),
-                    title: "A Suggested meeting time for Group OurTime" 
-                  },
-          
-                  {
-                    start: new Date(2019, 0, 11, 10, 30),
-                    end: new Date(2019, 0, 11, 13, 15),
-                    title: "A Suggested meeting time for Group OurTime" 
-                  },
-                  {
-                    start: new Date(2019, 0, 13, 10, 30),
-                    end: new Date(2019, 0, 13, 13, 15),
-                    title: "A Suggested meeting time for Group OurTime" 
-                  },
-                ]
-    
 
 
            /**** */
@@ -118,261 +88,386 @@ router.route('/myfreetime').get((req, res) => {
 /******************************************************************************************/
 
 
-router.route('/creategroup').get((req, res) => {
+router.get('/creategroup', async function (req, res) { //async
     console.log("in /creategroup NOW");
-    console.log(JSON.stringify(req.headers.group))
-
- // var token = req.headers.authorization; 
-  //console.log(token);
-
-  
-
-
-        // console.log("hererererer")
-        // console.log(user.events);
-
-        res.json({
-            here: "pass from route freetime worked"
-        });
-     });
-
-
-
-
-/******************************************************************************************/
-
-// display my free time (logged in user's free time). 
-router.get('/events/myfreetime', (req, res)=> {
-// query database for this user's events. // QUESTION: why able to access database details of user via req.user
-            User.findOne({googleId: req.user.googleId}).then((currentUser) => {
-                if(currentUser){
-                    // already have this user
-                    res.send(currentUser.events);
-                    done(null, currentUser);
-                }
-            });
-});
-
-/******************************************************************************************/
-// display logged in users' groups and intersecting times. 
-router.get('/events/mygroups', (req, res) => {
-        User.findOne({googleId: req.user.googleId}).then((currentUser) => {
-            if(currentUser){
-                // already have this user
-                var mygroups = [];
-                for (var i of currentUser.groups) {
-                    mygroups.push(i)
-                }
-                res.send(mygroups);
-                done(null, currentUser);
-            }
-        });
-
-    // query database for this user's group intersecting times.
-     
-    // display group name
-
-    // display group intersecting times. 
-
-});
-
-/******************************************************************************************/
-
-// display group members and intersecting times
-router.get('/events/viewgroup', (req,res) => {
-    Group.findOne({groupName: "Group1"}).then((group) => {
-        if (group) {
-            User.find({googleId: {$all: group.users}}).then((allUsers) => {
-                var arrUsers = [{username: String, email: String}];
-
-                allUsers.forEach(function(user, array){
-                    arrUsers.push({username: user.username, email:user.emails})
-                });
-
-                res.send({members: arrUsers, freetimes: group.freetimes})
-                done(null, allUsers);
-            });    
-            done(null, group);
-        }
-    });
-});
-
-/******************************************************************************************/
-
-router.get('/events/viewallgroups', (req, res) => {
-    User.findOne({googleId: req.user.googleId}).then((currentUser) => {
-        if (currentUser) {
-            var groupNames = [];
-            // get group name
-            currentUser.groups.forEach(function(group, array){
-                groupNames.push(group);
-            });
-
-            // get all groups' free times 
-            Group.find({groupName: {$all: groupNames}}).then((allGroups) => {
-                var groupFreeTimes = [];
-                allGroups.forEach(function(group, array){
-                    groupFreeTimes.push(group.events);
-                });
-                res.send(groupFreeTimes);
-                done(null, allGroups);
-            })
-        }
-        done(null, currentUser)
-    });
-}); 
-
-/******************************************************************************************/
-
-router.get('/events/creategroup', (req,res) => {
-    // receive a form with groupName, and email addresses of users. 
-    var groupName = "Group1";
-    var userEmails = ["collinsmetto@gmail.com", "ckmetto@princeton.edu"];
+    // fetch input 
+    var token = req.headers.authorization;
     
-    /*****************************************************************/
-    // check if group name already exists and throw error 
-    Group.findOne({groupName: groupName}).then((currentGroup) => {
-        if (currentGroup) { // TODO: if group already exists, opt to join group? 
-            console.log("Group name exists") //  show modal
-            done(null, currentGroup)
-        }
-        else {
-                 // create a new group 
-                new Group({
-                    groupName: groupName,   
-                }).save().then((newGroup) => {
-                    done(null, newGroup);
-                });
-        }
-    });
+    var groupId = req.headers.groupid;
+    var newGroupName = req.headers.groupname;
+    var groupEmails = req.headers.groupemails.split(',');
+    
+      // 1. create group. 
+   /**************************************/
+ 
+ /*
+   Group.upsertGroup(newGroupName, groupId, function(err, group) {
+    console.log("in upsert");
+    console.log(err)
+    //return done(err, group); // exits with code 0
+});
+*/
 
+
+
+        // check if group name already exists and throw error 
+        Group.findOne({groupName: newGroupName}).then((group) => {
+            if (group) { // TODO: if group already exists, opt to join group? 
+                console.log("Group name exists") //  show modal
+               // res.json{("Group name exists")}
+                // done(null, group)
+            }
+            else 
+            {
+/********************************************************************************************************************************************/
+                    // create a new group 
+                   var group = new Group({
+                        groupName: newGroupName,
+                        groupId: groupId,
+                        users: [], 
+					    invalidUsers: [],
+					    events: [],
+					     freetimes:[],
+
+                     })
+                     group.save(function(error, savedGroup) {
+                        if (error) {
+                            console.log(error);
+                        }
+                        console.log(savedGroup);
+
+                       // return cb(error, savedUser);
+              
+    
+
+        // add logged in (self) to group 
+        
+        /*****/
+
+         // Check token that was passed by decoding token using secret
+         jwt.verify(token, config.googleAuth.clientSecret, function(err, user) {
+            if (err) throw err;
+            
+             var userEmail = user.email;
+             console.log(userEmail);  // id, email, googleId, iat, exp
+
+            // add group to logged in user (self)
+            User.findOneAndUpdate(
+                {email: user.email},
+                {$addToSet: {groups: newGroupName}},
+                {new: true, runValidators:true}).then(doc => {
+                    console.log("Success adding group to logged in user")}).catch(err => {
+                        console.error(err)});
+            // add logged in user (self) to group 
+            var userEvents = getUserEvents(user);
+             Group.findOneAndUpdate(
+                {groupName: newGroupName},
+                {$addToSet: {users: userEmail,  events: userEvents}},
+                {new: true, runValidators:true}).then(doc => {
+                    console.log("Success adding group to logged in user")}).catch(err => {
+                        console.error(err)});
+            
+             
+            })
+        });
+
+
+/********************************************************************************************************************************************/     
+   
+   // 2. add users and invalid users to groups.
    /*****************************************************************/
 
     // LOOP: search for each user's email, add user to user array in GroupSchema, add user events to group   
-  
-    userEmails.forEach(function(userEmail, array){
-                User.findOne({emails: {$elemMatch:{value:userEmail}}}).then((currentUser) => {
-                
-                    if(currentUser){
-
-                        var googleId =  currentUser.googleId;
-                        var result = addUserEvents(currentUser); // get user events 
-                       
+    groupEmails.forEach(function(userEmail) {
+       console.log(userEmail)
+       
+        //var query = {email:'ckmetto@princeton.edu'};
+       
+        //var query = {email: userEmail};
+        
+        User.findOne({'email': userEmail}).then((user) => { // check this query!!!!!!
+            console.log(user); // user is returned as null???? 
                         // push free time
-                        Group.findOne({groupName: groupName}).then((group) => {
-                            var eventsArr = group.events; 
-                            eventsArr.push(result);
+                 Group.findOne({groupName: newGroupName}).then((group) => {
+       
+                if(user){
+                console.log(user.email);
+                    var googleId =  user.googleId;
+                    console.log("sbksjbfksjbfksjdabfsdkjfbdskljfbsdlkajfbadsk")
+                    var result = getUserEvents(user); // get user events  
+                    var eventsArr = group.events; 
+                    eventsArr.push(result);
+                    // addGroupToUser(googleId, groupName); // NOT FUNCTIONAL: add this group to user collection
 
-                            var freetimeArr =  sample.findGroupFreeTimes([eventsArr]); //["Success! These are the free times."];
-
-                            // add users by googleId to this group &&  add user events to this group
-                                Group.findOneAndUpdate(
-                                    {groupName: groupName},
-                                    {$addToSet: {users: googleId, events: result, freetimes: freetimeArr}}, // duplicate user solved by addToSet 
-                                    {new:true, runValidators:true}).then(doc =>  {
-                                        console.log("Success adding user events, and updating free times")}).catch(err => {
-                                            console.error(err)});
-                        });
-    
-                              
-                        addGroupToUser(googleId,groupName); // add this group to user collection            
-                       res.send({freetimes: freetimeArr})
-                        done(null, currentUser);
                     
-                    }
-                    // user not found so add to error array. 
+                    // add users by googleId to this group &&  add user events to this group
+                        Group.findOneAndUpdate(
+                            {groupName: newGroupName},
+                            {$addToSet: {users: userEmail, events: result}}, // duplicate user solved by addToSet 
+                            {new:true, runValidators:true}).then(doc =>  {
+                                console.log("Success adding user events, and updating free times")}).catch(err => {
+                                    console.error(err)});
+
+                        /**** */  // add group to user 
+                                User.updateOne(
+                                {googleId:user.googleId},
+                                {$addToSet:{users: user.email, groups:newGroupName}},
+                                {new: true, runValidators:true}).then(doc => {
+                                    console.log("Success in adding group to user")
+                                       }).catch(err => {
+                                        console.error(err)})
+                     }
+                    // user not found so add to group error array. 
                     else {
                         console.log("User not found", userEmail);
-                    }
-                });
-        });
-        //res.send("Group created");
-});
+                        Group.findOneAndUpdate(
+                            {groupName: newGroupName},
+                            {$addToSet: {invalidUsers: userEmail}},
+                            {new: true, runValidators:true}).then(doc => {
+                                console.log("Success adding invalid user emails")}).catch(err => {
+                                    console.error(err)});
+                                           
+                    } 
+                        });//
+                //done(null, user);
+               });//
+     });// 
+  
+   /**************************************/
+    
+   // 3. build freetimes array and return freetimes and invalid users.
+   /**************************************/
+             // push free time
+              Group.findOne({groupName: newGroupName}).then((group) => {
+                var eventsArr = group.events; 
+                eventsArr.push(result);
+
+                var freetimeArr = ["these are the free times"];//  sample.findGroupFreeTimes([eventsArr]); //["Success! These are the free times."];
+              
+                // add free times to this group 
+                    Group.findOneAndUpdate(
+                        {groupName: newGroupName},
+                        {$addToSet: {freetimes: freetimeArr}}, // duplicate user solved by addToSet 
+                        {new:true, runValidators:true},
+                        /*{groupfreetime: freetimeArr}).then(doc =>  {
+                            console.log("Success updating free times")
+                        */
+                        ).catch(err => {
+                                console.error(err)
+                            });
+                })
+                
+                         
+ }});   // parent
+// TODO: HOW TO SEND INFO BACK??
+ // 4. return freetimes and invalid users.
+let group = await Group.findOne({groupName:newGroupName});
+// Group.findOne({groupName:newGroupName}), function (err, group) => {
+//     if (err) { throw err; }
+//     doSomethingElseWith(user);
+//     res.json(result);
+  
+ res.json({
+    freetimeArr: group,
+    groupfreetime: "these are the group free times", // group.freeTimes
+    errorUsers:"Error page: these users do not exist. Please invite them." // group.invalidUsers
+});    
+})                    
 
 
 
 /******************************************************************************************/
 
-
-router.get('/events/addmembertogroup', (req,res) => {
+router.get('/deletegroup', async (req, res) => {
+    console.log("in /deletegroup NOW");
+     var groupId = req.headers.groupid;
+     var token = req.headers.authorization; 
     
-    var groupName = "Group1"
-    var userEmails = ["collinsmetto@gmail.com"];
-    userEmails.forEach(function(email, array){
-        User.findOne({emails: {$elemMatch: {value:email}}}).then((currentUser) => {
-            console.log("here")
-            if(currentUser) {
+       console.log(groupId);
 
-                addGroupToUser(currentUser, groupName);
-                addUserToGroup(currentUser, groupName);   
+        // get logged in user 
+        if (!token) {
+            console.log("Token not received");
+        return res.status(401).json({message: "Must pass token"});
+        }
+        // Check token that was passed by decoding token using secret
+        jwt.verify(token, config.googleAuth.clientSecret, async function(err, user) {
+            if (err) throw err;
+           //  console.log(user);  // id, email, googleId, iat, exp
+
+            // 1. remove group from user 
+           // User.findOneAndupdate({email: user.email}, { $pullAll: {groups: [groupId] } } )
+               // remove user from group
+              // push free time
+             Group.findOne({groupId: groupId}).then((group) => {
+
+                /* // free time algorithm here 
+                var eventsArr = group.events; 
+                console.log(eventsArr)
+                var filteredEvents = group.events.filter(function(element) { return element.email != user.email; });
+                console.log(filteredEvents);
+                
+                console.log(group.users);
+                var newUsers = group.users.filter(function(element){ console.log(element); return element != user.email}) 
+                console.log(newUsers)
+                */
+                // run free time algorithm 
+                var freetimeArr = ["these are the free times"];//  sample.findGroupFreeTimes([eventsArr]); //["Success! These are the free times."];
+                console.log(groupId);    
+                     User.findOneAndUpdate(
+                        {email: user.email},
+                        {$pull: {groups: groupId}}, // duplicate user solved by addToSet 
+                        {new:true, runValidators:true}).then(doc =>  {
+                            console.log("Success updating free times")
+                        }).catch(err => {
+                                console.error(err)
+                            });
+                    
+                    Group.findOneAndUpdate(
+                        {groupId: groupId},
+                        {$pull: {users: user.email, events:{email: user.email}}}, 
+                        {new:true, runValidators:true}).then(doc =>  {
+                            console.log("Success updating free times")
+                        }).catch(err => {
+                                console.error(err)
+                            });
+
+                    Group.findOneAndUpdate(
+                        {groupId: groupId},
+                        {$addToSet: {freetimes: freetimeArr}}, // duplicate user solved by addToSet 
+                        {new:true, runValidators:true}).then(doc =>  {
+                            console.log("Success updating free times")
+                        }).catch(err => {
+                                console.error(err)
+                            });
+                    
+
+
+
+                        });           
+
+        });
+      let group = await Group.findOne({groupId: groupId});
+      res.json({
+        group:group,
+        here: "return from route deletegroup worked"
+    });
+      
+    });
+
+/******************************************************************************************/
+
+router.get('/updategroup', async (req, res) => {
+        // fetch input 
+        var token = req.headers.authorization;
+        var groupId = req.headers.groupid; // groupid 
+        var oldGroupMembers = req.headers.oldgroupmembers.split(',');;
+        var newGroupMembers = req.headers.newgroupmembers.split(',');;
+// error check for invalid users.  // create modal error page, send email invite 
+       
+        // Remove old members 
+    oldGroupMembers.forEach(function(oldMemberEmail, array) {
+            User.findOne({email: oldMemberEmail}).then((user) => {
+                if  (user) {
+                    removeGroupFromUser(user, groupId);
+                    removeUserFromGroup(user, groupId);
+                }
+                else { // add to invalid users 
+                    addInvalidUserToGroup(oldMemberEmail, groupId);
+                    console.log("User not found");
+                }
+            });
+        });
+
+    // add new members 
+    newGroupMembers.forEach(function(newMemberEmail){
+        User.findOne({email: newMemberEmail}).then((user) => {
+                console.log(newMemberEmail);
+                console.log(user);
+            if(user) {
+                addGroupToUser(user, groupId);
+                addUserToGroup(user, groupId);   
             }
-            // create modal error page, send email invite 
-            else {
-                console.log("username", currentUser.username)
+
+            else { // add to invalid users array of group 
+
+                addInvalidUserToGroup(newMemberEmail, groupId);
                 console.log("User not found: addmembertogroup");
-                // res.send("User not found: addmembertogroup");
+              
             }
         });
         
     });
-    res.send("Successfully added member to group");
+    
+let group = await Group.findOne({groupId:groupId});
+res.json({
+        group:group,
+            here: "return from route updategroup worked"
+        });
+
 });
+
+
+
+
+
 
 
 /******************************************************************************************/
 
-// remove self from group, admin remove a member from a group
-router.get('/events/removememberfromgroup', (req,res) => {
-
-    var groupName = "Group1";
-    var userEmails = ["collinsmetto@gmail.com"];
-    userEmails.forEach(function(email, array) {
-        User.findOne({emails: {$elemMatch:{value: email}}}).then((currentUser) => {
-            if  (currentUser) {
-                removeGroupFromUser(currentUser, groupName);
-                removeUserFromGroup(currentUser, groupName);
-            }
-            else {
-                console.log("User not found");
-            }
-        });
-    });
 
 
-    res.send("Successfully removed member from group");
-});
+/******************************************************************************************/
+
 
 /******************************************************************************************/
 
 // HELPER FUNCTIONS 
-function addUserEvents(currentUser) {
+function getUserEvents(user) {
        var events = []
-        if(currentUser) {
+        if(user) {
             // save user events in array
-            currentUser.events.forEach(element => {
+        if (user.events) {
+            user.events.forEach(element => {
                events.push(element);
             });
-            var result = {googleId:String, events:[]};
-            result = {googleId: currentUser.googleId, events: events}
+        }
+            var result = {email:String, events:[]};
+            result = {email: user.email, events: events}
             return result; 
         }
 }
 
-function addGroupToUser(user, groupName){
-    console.log("here1")
-    User.findOneAndUpdate(
-        {googleId:user.googleId},
-        {$addToSet:{groups:groupName}},
+function addInvalidUserToGroup (userEmail, groupId) {
+    Group.findOneAndUpdate(
+        {groupId: groupId},
+        {$addToSet: {invalidUsers: userEmail}},
         {new: true, runValidators:true}).then(doc => {
-            console.log("Success in adding group to user")}).catch(err => {
+            console.log("Success adding invalid user emails")}).catch(err => {
+                console.error(err)});
+                       
+
+}
+
+
+function addGroupToUser(user, groupId){
+    console.log("here1")
+    console.log(user)
+    User.findOneAndUpdate(
+        {email:user.email},
+        {$addToSet:{groups:groupId}},
+        {new: true, runValidators:true}).then(doc => {
+            console.log("Success in adding group to user")
+            console.log(doc)
+        }).catch(err => {
                 console.error(err)})
 }
  
-function addUserToGroup(currentUser, groupName) {
+function addUserToGroup(user, groupId) {
     console.log("here2")
     // push free time
-    Group.findOne({groupName: groupName}).then((group) => {
-        var result = addUserEvents(currentUser); // get user events 
+    Group.findOne({groupId: groupId}).then((group) => {
+        var result = getUserEvents(user); // get user events 
         var eventsArr = group.events; 
         
         eventsArr.push(result);
@@ -382,14 +477,15 @@ function addUserToGroup(currentUser, groupName) {
 
         // add users by googleId to this group && add user events to this group
             Group.findOneAndUpdate(
-                {groupName: groupName},
-                {$addToSet: {users: currentUser.googleId, events: result}}, // duplicate user solved by addToSet 
+                {groupId: groupId},
+                {$addToSet: {users: user.email, events: result}}, 
                 {new:true, runValidators:true}).then(doc =>  {
                     console.log("Success adding new member: to group")}).catch(err => {
                         console.error(err)});
+
             // update freetime array 
             Group.updateOne(
-                {groupName: groupName},
+                {groupId: groupId},
                 {$set: {freetimes: freetimeArr}},
                 {new: true, runValidators: true}).then(doc => {
                     console.log("Success adding new member: updating freetime array ")}).catch(err => {
@@ -399,35 +495,35 @@ function addUserToGroup(currentUser, groupName) {
 }
 
 
-function removeGroupFromUser(user, groupName) {
+function removeGroupFromUser(user, groupId) {
     User.updateOne(
-        {googleId: user.googleId},
-        {$pull: {groups: groupName}},
+        {email: user.email},
+        {$pull: {groups: groupId}},
         {new: true, runValidators:true}).then(doc => {
             console.log("Success remove: group from user")}).catch(err => {
                 console.error(err)});
 
 }
-function removeUserFromGroup(user, groupName){
+function removeUserFromGroup(user, groupId){
     console.log("removeUserFromGroup");
   // remove users, events, update freetime
     Group.updateOne(
-        {groupName: groupName},
-        {$pull: {users: user.googleId, events:{googleId: user.googleId}}},
+        {groupId: groupId},
+        {$pull: {users: user.email, events:{email: user.email}}},
         {new: true, runValidators: true}).then(doc => {
             console.log("Success remove: user from group")}).catch(err => {
                 console.error(err)});
   
     // update free times 
-       Group.findOneAndUpdate({groupName: groupName}).then((group) => {
+       Group.findOneAndUpdate({groupId: groupId}).then((group) => {
         var eventsArr = group.events; 
-        eventsArr = eventsArray.filter(function(el) { return el.googleId != user.googleId; }); // exclude deleted user free events
+        eventsArr = eventsArray.filter(function(el) { return el.email!= user.email; }); // exclude deleted user free events
         // compute new free times 
         var freetimeArr = ["Success! User remove: These are the free times after user has been removed."]; //sample.findGroupFreeTimes([eventsArr]); 
          console.log("HERERERERERE")
         // update freetime array 
         Group.updateOne(
-            {groupName: groupName},
+            {groupId: groupId},
             {$set: {freetimes: ["SJBFDKSJBFDSKJFBSDKJ"]}},
             {new: true, runValidators: true}).then(doc => {
                 console.log("Success remove: update user free time after remove from group ")}).catch(err => {
@@ -435,7 +531,7 @@ function removeUserFromGroup(user, groupName){
                 }); 
      });
 }
-function deleteGroup(groupName){}
+
 
 /******************************************************************************************/    
 
