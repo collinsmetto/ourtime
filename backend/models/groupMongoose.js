@@ -10,7 +10,7 @@ module.exports = function () {
 
      
         var GroupSchema = new Schema ({					
-                groupName: {type: String, required: true,trim: true},
+                groupName: String,
                 groupId: {type: Number, unique: true, required: true, trim: true},
                 users: [], 
                 invalidUsers: [],
