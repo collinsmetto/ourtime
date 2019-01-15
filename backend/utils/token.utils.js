@@ -3,8 +3,7 @@ var config = require('../config')
 
 
 var createToken = function(auth) {
-    console.log("in token.utils")
-    //console.log(auth)
+    
     return jwt.sign({
             id: auth.id,
             email: auth.email,
