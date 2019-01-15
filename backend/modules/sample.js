@@ -6,16 +6,17 @@ console.log('This script does operations with data from the database.');
 // mongodb://OurTime:tictactoe5@ds157853.mlab.com:57853/our_time
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
-if (!userArgs[0].startsWith('mongodb://')) {
-    console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
-    return
-}
+// if (!userArgs[0].startsWith('mongodb://')) {
+//     console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
+//     return
+// }
 
 var async = require('async')
-var User = require('../models/user')
-var Event = require('../models/event')
-var chance = require('chance').Chance(); // to generate random entries 
 
+var User = require('../models/userTime')
+var Event = require('../models/event')
+//var chance = require('chance').Chance(); // to generate random entries 
+/*
 var mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true); // set mongoose to avoid collection.ensureIndex Deprecation warning 
 
@@ -26,7 +27,7 @@ mongoose.Promise = global.Promise;
 
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-
+*/
 
 //User.find({}, function(err, allUsers){
 function findGroupFreeTimes(allUsers) {
