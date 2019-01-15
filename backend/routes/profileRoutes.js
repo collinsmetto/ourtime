@@ -6,7 +6,7 @@ var gcal = require('google-calendar');
 //var Group = require('../models/group');
 require('../models/groupMongoose')();
 var Group = require('mongoose').model('Group');
-
+var timeFinder = require('../modules/timeFinder'); // import time finder module 
 
 /******************************************************************************************/
 
