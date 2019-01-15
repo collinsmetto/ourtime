@@ -11,7 +11,15 @@ const MomentRange = require('moment-range');
 const moment = MomentRange.extendMoment(Moment);
 /******************************************************************************************/
 
+router.get('/viewsinglegroup', async(req, res) => {
+    var groupId = req.headers.groupid;
+    let group = await Group.findOne({groupId: groupId});
 
+    res.json({
+        group: group,
+        message: "view single group"
+    });
+})
 router.get('/getallgroups', async (req, res) => {
        
 
@@ -33,7 +41,7 @@ router.get('/getallgroups', async (req, res) => {
        var allgroups = user.groups; //get details
 
          if (err) throw err;
-      let groups = await Group.find({groupName: allgroups})
+      let groups = await Group.find({groupId: allgroups})
       console.log(groups);
           res.json({
           
@@ -209,15 +217,19 @@ router.get('/creategroup', async function (req, res) { //async
  }});   // parent
 
             // 4. return freetimes and invalid users.
-            let group = await Group.findOne({groupId:newGroupId});
+           // let group = await Group.findOne({groupId: 1547588961354});//newGroupId
 
             
             res.json({
-                group: group,
-                message: "group from create group"
+                message: "Group successfully created"
             
             });    
 })   
+
+
+
+
+
 
 function getFreeTimes (groupEvents) 
     {

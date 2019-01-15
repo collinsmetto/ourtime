@@ -32,10 +32,12 @@ class App extends Component {
       })
       .then(function(myJson) {
         console.log("IN APPP.JS \n\n\n")
-        console.log(JSON.stringify(myJson));
+        // console.log(JSON.stringify(myJson));
         myJson.groups.forEach(function(group){
-          groups[group.ID] = group;
+          // console.log(group.groupId);
+          groups[group.groupId] = group;
         });
+        console.log(groups);
            
       }
       );
@@ -51,6 +53,10 @@ class App extends Component {
       groups: groups,
       dbInfo: ''
     };
+
+    console.log(this.state.groups);
+
+    // this.
       
       this.createGroup = this.createGroup.bind(this);
       this.deleteGroup = this.deleteGroup.bind(this);
@@ -96,38 +102,90 @@ class App extends Component {
   }
 
   // Shows the free times of a singular group, given the groupID
-  viewSingleGroup = (groupID) => {
+  viewGroup = (groupID, isSingle) => {
     //console.log(groupID)
-    //console.log("Call to view group with ID: " + groupID);
+    console.log("Call to view group with ID: " + groupID);
     
-    var groupEvents = this.state.groups[groupID].events;
-    //console.log(groupEvents);
-    if (this.state.groups[groupID]) 
-      this.setState({
-        stateCalSingleGroup: groupEvents,
-        isSingleGroup: true
-      });
-    //console.log(this.state.stateCalSingleGroup, this.state.isSingleGroup);
+
+/** */
+    const myHeaders = new Headers();
+
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('Authorization', this.state.token);
+    myHeaders.append('groupid', groupID)
+
+    fetch('http://localhost:4000/profile/viewsinglegroup', {
+    method: 'GET',
+    headers: myHeaders,
+    })
+          .then(function(response) { 
+          return response.json();
+          })
+          .then(function(group) {
+            // do 
+            console.log(group)
+            if (group.group.freetimes)
+            {
+              const groupFreeTimes = [];
+              group.group.freetimes[0].forEach(function(event){
+                var date = {start: new Date(event.start),
+                            end: new Date(event.end),
+                            title: group.group.groupName}
+                groupFreeTimes.push(date);
+              });
+              console.log( groupFreeTimes);
+              if (isSingle){
+                this.setState({ 
+                  //
+                  stateCalSingleGroup: groupFreeTimes,
+                  isSingleGroup: true
+                });
+              }
+              else 
+              {
+                this.setState({ 
+                  //
+                  stateCalAllGroups: this.state.stateCalAllGroups.concat(groupFreeTimes),
+                  isSingleGroup: false
+                });
+              }
+              
+            //console.log(this.state.stateCalSingleGroup, this.state.isSingleGroup);
+          }
+        }.bind(this)
+        );
+      }
+
+
+
+
+
+/**** */
+  viewSingleGroup = (groupId) => {
+    console.log();
+    this.viewGroup(groupId, true);
   }
+    
 
   viewAllGroups = () => {
     console.log("Call to view all groups");
-    var allGroupTimes = new Set();
+    //var allGroupTimes = new Set();
     // for (var group in this.state.groups) {
     //   if (group.events)
     //     allGroupTimes.add(group.events);
     // }
 
 
-    Object.keys(this.state.groups).forEach(function(key) {
-      const groupEvents = this.state.groups[key].events;
-      //console.log(groupEvents);
-      if(groupEvents)
-      {
-        Object.keys(groupEvents).forEach(function(key){
-          //console.log(groupEvents[key]);
-          allGroupTimes.add(groupEvents[key]);
-        })
+    Object.keys(this.state.groups).forEach(function(groupId) {
+      this.viewGroup(groupId, false);
+      // const groupEvents = this.state.groups[key].events;
+      // //console.log(groupEvents);
+      // if(groupEvents)
+      // {
+      //   Object.keys(groupEvents).forEach(function(key){
+      //     //console.log(groupEvents[key]);
+      //     allGroupTimes.add(groupEvents[key]);
+      //   })
 
         // for (var event in group.events)
         // {
@@ -135,21 +193,21 @@ class App extends Component {
         //   console.log(event);
         //   allGroupTimes.add(event);
         // }
-      }
+      // }
         }.bind(this)
     );
 
-    let allGroupTimesArray = [];
+    // let allGroupTimesArray = [];
     
-    allGroupTimes.forEach(v => allGroupTimesArray.push(v));
-    console.log("Ideal calendar state", allGroupTimesArray);
+    // allGroupTimes.forEach(v => allGroupTimesArray.push(v));
+    // console.log("Ideal calendar state", allGroupTimesArray);
 
-    this.setState({
-      stateCalAllGroups: allGroupTimesArray,
-      isSingleGroup: false
-    });
+    // this.setState({
+    //   stateCalAllGroups: allGroupTimesArray,
+    //   isSingleGroup: false
+    // });
 
-    console.log("Current Calendar State", this.state.stateCalAllGroups, this.state.isSingleGroup);
+    // console.log("Current Calendar State", this.state.stateCalAllGroups, this.state.isSingleGroup);
   
   } 
         
@@ -160,15 +218,15 @@ class App extends Component {
   UPDATE: Updates group members given groupID, a Set object of
           emails to delete, and a Set object of emails to add */
   
-  createGroup = (groupName, groupEmails, groupID) => {
+  createGroup = (groupName, groupEmails, groupId) => {
     //groupID = ; // NEED TO SET TO UNIQUE NUMBER NOT IN APP (perhaps hashing of group name?)
     // id = Date.now()
     //groupEmails = new Set(groupEmails.replace(/\s+/g, '').split(","));
 
     var newGroup = {
-      name: groupName, 
-      emails: groupEmails, 
-      ID: groupID
+      groupName: groupName, 
+      groupEmails: groupEmails,
+      groupId: groupId,
     };
 
     // send data to database
@@ -176,9 +234,9 @@ class App extends Component {
 
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('Authorization', this.state.token);
-    myHeaders.append('groupid', newGroup.ID)
-    myHeaders.append('groupname', newGroup.name)
-    myHeaders.append('groupemails', newGroup.emails)
+    myHeaders.append('groupid', newGroup.groupId)
+    myHeaders.append('groupname', newGroup.groupName)
+    myHeaders.append('groupemails', newGroup.groupEmails)
     
     fetch('http://localhost:4000/profile/creategroup', {
           method: 'GET',
@@ -197,50 +255,32 @@ class App extends Component {
       
           
 
-            var freetimes = group.freetimes;
-            if (freetimes)
-            {
+            // var freetimes = group.freetimes;
+            // // console.log(freetimes);
+            // if (freetimes)
+            // {
               
-              freetimes.map(function(freetime){
-             freetime.title = groupName;
-              return freetime;
-            });
-            }
-            else console.log("Event doesn't exist");
+            //   freetimes.map(function(freetime){
+            //     freetime.title = groupName;
+            //     return freetime;
+            // });
+            // }
+            // else console.log("Event doesn't exist");
             
-            
-
-            // (groupName === "Yerr") ? ([
-            //   {
-            //     start: new Date('2018-12-08T02:00:00-05:00'),
-            //     end: new Date('2018-12-08T03:00:00-05:00'),
-            //     title: "Some title" 
-            //   },
-      
-            //   {
-            //   start: new Date(2019, 0, 1, 12, 30),
-            //   end: new Date(2019, 0, 1, 17, 15),
-            //   title: "Trial#2"
-            //   }
-            // ]) : ([{
-            //   start: new Date('2019-02-08T02:00:00-05:00'),
-            //   end: new Date('2019-02-08T03:00:00-05:00'),
-            //   title: "Some title" 
-            // }]);
 
             var newGroup = {
-              name: groupName, 
-              emails: groupEmails, 
-              ID: groupID,
-              freetimes: freetimes
+              groupName: groupName, 
+              groupEmails: groupEmails, 
+              groupId: groupId,
+              // freetimes: freetimes
             };
             
-            currGroups[groupID] = newGroup;
+            currGroups[groupId] = newGroup;
             // console.log("New group events: " + newGroup.events);
             // console.log("New group: ", currGroups[groupID].events);
             this.setState({groups: currGroups});
 
-            console.log("Added this group: " + groupID, this.state.groups);
+            console.log("Added this group: " + currGroups[groupId].groupId + ", " + currGroups[groupId].groupName);//this.state.groups);
         }.bind(this)
     );
   }

@@ -23,7 +23,7 @@ class GroupItems extends Component {
 
         const { viewSingleGroup } = this.props;
         
-        //console.log("SingleGroup Group ID" + groupID);
+        console.log("SingleGroup Group ID: " + groupID);
         viewSingleGroup(groupID);
     }
     
@@ -33,7 +33,7 @@ class GroupItems extends Component {
         return( 
             // this.viewSingleGroup.bind(this, group.ID)
             
-            <form fullWidth={true} key={group.ID} onSubmit={this.showSingleGroup.bind(this, group.ID)}>
+            <form fullWidth={true} key={group.ID} onSubmit={this.showSingleGroup.bind(this, group.groupId)}>
             <CopyToClipboard text={group.ID}>
             <Button 
                 type="submit" 
@@ -42,7 +42,7 @@ class GroupItems extends Component {
                 color="primary"
                 id={group.ID}>
 
-                {group.name} : {group.ID}
+                {group.groupName} : {group.groupId}
             </Button>
             </CopyToClipboard>
             </form>);
