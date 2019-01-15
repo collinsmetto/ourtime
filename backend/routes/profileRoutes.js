@@ -83,7 +83,7 @@ router.get('/creategroup', async function (req, res) { //async
                     // create a new group 
                    var group = new Group ({
                         groupName: newGroupName,
-                        groupId: groupId,
+                        groupId: newGroupId,
                         users: [], 
 					    invalidUsers: [],
 					    events: [],

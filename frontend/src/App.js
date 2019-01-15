@@ -195,13 +195,21 @@ class App extends Component {
           
           var currGroups = this.state.groups;
       
-          //console.log("Prior to adding new group", this.state.groups);
+          
 
-            var events = group.freetimes;
-            events.map(function(event){
-              event.title = groupName;
-              return event;
+            var freetimes = group.freetimes;
+            if (freetimes)
+            {
+              
+              freetimes.map(function(freetime){
+             freetime.title = groupName;
+              return freetime;
             });
+            }
+            else console.log("Event doesn't exist");
+            
+            
+
             // (groupName === "Yerr") ? ([
             //   {
             //     start: new Date('2018-12-08T02:00:00-05:00'),
@@ -224,7 +232,7 @@ class App extends Component {
               name: groupName, 
               emails: groupEmails, 
               ID: groupID,
-              events: events
+              freetimes: freetimes
             };
             
             currGroups[groupID] = newGroup;
