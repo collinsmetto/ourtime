@@ -9,12 +9,11 @@ var EventSchema = new Schema ({
 	start: {
 		date: String, // changed this from String 
 		dateTime: String,  // changed this from String 
-		timeZone: String
-	},
+			},
 	end: {
 		date: String,
 		dateTime: String,
-		timeZone: String
+		
 	},
 	});
 	

@@ -13,7 +13,7 @@
   }
    
   #flyoutMenu.hide {
-    transform: translate3d(-15vw, 0, 0);
+    transform: translate3d(-20vw, 0, 0);
   }
    
   #flyoutMenu.show {

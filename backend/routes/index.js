@@ -60,13 +60,16 @@ router.post('/send', (req, res, next) => {
 
 router.route('/auth/google')
     .post(passport.authenticate('google-token', {session: false}), function(req, res, next) { 
-      //console.log(req.user)  
+
       if (!req.user) {
             return res.send(401, 'User Not Authenticated');
         }  
+        console. log("in index routes")
+        console.log(req.user)
         req.auth = {
             id: req.user.id, 
-            email: req.user.email
+            email: req.user.email,
+            googleId: req.user.googleId
         };
         
         next();

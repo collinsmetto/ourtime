@@ -1,10 +1,10 @@
 'use strict';
 
 require('./models/mongoose')();
-require('./models/userTime')();
+//require('./models/userTime')();
 var passport = require('passport');
 var User = require('mongoose').model('User');
-var UserTime = require('mongoose').model('UserTime');
+//var UserTime = require('mongoose').model('UserTime');
 var GoogleTokenStrategy = require('passport-google-token').Strategy;
 var config = require('./config');
 var gcal = require('google-calendar');

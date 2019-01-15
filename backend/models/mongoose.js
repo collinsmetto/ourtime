@@ -49,6 +49,7 @@ module.exports = function () {
                             fullName: profile.displayName,
                             email: profile.emails[0].value,
                             events: freeBusyList.calendars.primary.busy,
+                            groups: [],
                             googleProvider: {
                                 id: profile.id,
                                 token: accessToken

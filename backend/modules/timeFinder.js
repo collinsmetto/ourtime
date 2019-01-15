@@ -48,8 +48,20 @@ user = {"allUserEvents": [
 
 ]};
 
+<<<<<<< HEAD
 function subtractRanges(longRanges, shortRanges)
   {
+=======
+function subtractRanges(longRanges, user)
+  {
+    shortRanges = []
+    e = null;
+    console.log(user.allUserEvents)
+    for (i=0; i<user.allUserEvents[0].length; i++) {
+        e = moment.range(user.allUserEvents[i].start, user.allUserEvents[i].end); 
+        shortRanges.push(e);
+    }
+>>>>>>> ede40893633336c6ba3d10ef494afb0ab4f9ae63
     // Always return an array
     if(shortRanges.length === 0)
       return longRanges.hasOwnProperty("length")
@@ -94,6 +106,7 @@ function subtractRanges(longRanges, shortRanges)
 
 
 
+<<<<<<< HEAD
 /*
 duration should be sent in as minutes.
 */
@@ -213,6 +226,13 @@ console.log(subtractRanges(interval, events))
     // console.log(user.allUserEvents[0].start)
 
 //}
+=======
+
+   
+   
+   
+
+>>>>>>> ede40893633336c6ba3d10ef494afb0ab4f9ae63
 function flatten (input) {
     var flattened=[];
     for (var i=0; i<input.length; ++i) {
@@ -263,4 +283,15 @@ function test () {
 
 }
 
+<<<<<<< HEAD
 //test();
+=======
+/*
+duration should be sent in as minutes.
+*/
+var startR = new moment("2019-01-15T13:00:00");
+var endR = new moment("2019-01-25T19:00:00");
+
+var longRanges = moment.range(startR, endR);
+subtractRanges(longRanges, user);
+>>>>>>> ede40893633336c6ba3d10ef494afb0ab4f9ae63

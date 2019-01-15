@@ -7,7 +7,8 @@ var createToken = function(auth) {
     //console.log(auth)
     return jwt.sign({
             id: auth.id,
-            email: auth.email
+            email: auth.email,
+            googleId: auth.googleId
         }, config.googleAuth.clientSecret, // added my-secret
         {
             expiresIn: 60 * 120

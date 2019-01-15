@@ -1,16 +1,16 @@
-body {
+.body {
   background-color: #EEE;
   font-family: sans-serif;
   font-size: 20px;
   padding: 25px;
   margin: 0;
-  overflow: auto;
+  overflow: none;
+  width: 100px;
 }
  
-#container li {
-  margin-bottom: 10px;
+#root li {
+  margin-bottom: 0px;
 }
-/* 
 .sidenav {
   height: 100%;
   width: 200px;
@@ -20,4 +20,5 @@ body {
   left: 0;
   background-color: #111;
   overflow-x: hidden;
-  } */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+} 

@@ -39,16 +39,18 @@ class GroupList extends Component {
     filterGroups(e){
         // Implemented with Calendar
         //console.log(this.state.freeTimes);
+        const { results } = this.state;
+        const { allGroups } = this.props; 
 
         var currGroup = this.state.groupItems.filter(function (group) {
-            return (group.key === e.key)
+            return (group.name === e.key)
         } );
-        return this.state.groups;
+        //results = allGroups;
     }
 
     viewAllGroups(e){
-        console.log(this.state.freeTimes);
-        return this.state.GroupItems;
+        //console.log(this.state.freeTimes);
+        return this.props.groups;
     }
     
 
@@ -57,16 +59,17 @@ class GroupList extends Component {
        
         return (
             <div>
-            <form>
-            <Input 
+            {/* <Input 
                 label="Search for Groups"
                 margin="normal"
                 inputRef={input => this.search = input}
                 // onChange={this.handleInputChange}
-                />
+                /> */}
 
-            <GroupItems entries={this.state.results}/>
-            </form>
+            <GroupItems 
+                groups={this.props.groups}
+                viewSingleGroup={this.props.viewSingleGroup}
+            />
             </div>
         );
     }
