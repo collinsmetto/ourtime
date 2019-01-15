@@ -3,6 +3,7 @@ import "./AddGroupMenu.css";
 import RaisedButton from "@material-ui/core/Button";
 import Input from '@material-ui/core/TextField';
 
+
 class AddGroupMenu extends Component {
 
     /* // Test of edit group functions; Would be put in child component
@@ -55,7 +56,7 @@ class AddGroupMenu extends Component {
     }
 
     handleChange(e) {
-        if (e.target.isSet)
+        if (e.target.isset)
             this.setState({[e.target.name]:
                 new Set(e.target.value.replace(/\s+/g, '').split(","))});
         else
@@ -73,12 +74,14 @@ class AddGroupMenu extends Component {
     submitCreateGroup(e) {
         e.preventDefault();
 
+
         const { createGroupName } = this.state;
         const { createGroupEmails } = this.state;
-        //const { createGroup } = this.props;
 
-        console.log(createGroupName);
-        console.log(createGroupEmails);
+        if (createGroupName & createGroupEmails) {
+
+        //console.log(createGroupName);
+        //console.log(createGroupEmails);
 
         const groupID = Date.now();
         if (typeof this.createGroup == 'function' )
@@ -87,6 +90,7 @@ class AddGroupMenu extends Component {
             console.log('createNewGroup not a function??');
 
         this.setState({ createGroupName: '', createGroupEmails: '' });
+        }
     }
 
     deleteGroup(groupID) {
@@ -126,10 +130,12 @@ class AddGroupMenu extends Component {
 
         //const { updateGroup } = this.props;
 
-        this.updateGroup(updateGroupID, 
-            updateGroupAdd, updateGroupRemove);
+        if(updateGroupID & (updateGroupAdd | updateGroupRemove)){
+            this.updateGroup(updateGroupID, 
+                updateGroupAdd, updateGroupRemove);
 
-        this.setState({ updateGroupID: '', updateGroupAdd: '', updateGroupRemove: ''});
+            this.setState({ updateGroupID: '', updateGroupAdd: '', updateGroupRemove: ''});
+        }
     }
 
     render() {
@@ -148,7 +154,7 @@ class AddGroupMenu extends Component {
                 className={visibility}>
 
                 <RaisedButton 
-                    variant="contained" color="primary" fullWidth="true"
+                    variant="contained" color="primary" fullWidth={true}
                     onClick={this.props.handleMousesDown}> Exit
                 </RaisedButton>
                 {/* <ul>
@@ -168,27 +174,27 @@ class AddGroupMenu extends Component {
                     <Input
                         type="text"
                         name="createGroupName"
-                        isSet={false}
+                        isset={false}
                         onChange={this.handleChange}
                         label="Group Nickname"
                         //style={{ width: "200px" }}
-                        fullWidth="true"
+                        fullWidth={true}
                         // inputRef={(a) => this._inputElement = a}
                     />
                     <Input
                         type="text"
                         name="createGroupEmails"
-                        isSet={true}
+                        isset={true}
                         onChange={this.handleChange}
                         label="Emails"
                         helperText="Ex: email1@gmail.com, email2@gmail.com"
-                        fullWidth="true"
+                        fullWidth={true}
                         // inputRef={(a) => this._inputElement = a}
                     />
 
 
                     <RaisedButton 
-                        fullWidth="true"
+                        fullWidth={true}
                         type="submit">
                         Create Group
                     </RaisedButton>
@@ -196,17 +202,18 @@ class AddGroupMenu extends Component {
                 </div>
 
                 <div style={{ padding: "10px" }}>
-                    <form>
+                    <form onSubmit={this.submitDeleteGroup}>
                     <Input
                         type="text"
                         name="deleteGroupID"
-                        isSet={false}
-                        fullWidth="true"
+                        isset={false}
+                        fullWidth={true}
                         onChange={this.handleChange}
                         label="Group ID"
                     />
                     <RaisedButton 
-                        fullWidth="true" 
+                        fullWidth={true}
+                        type="submit"
                         //onClick={() => deleteGroup(this.state.deleteGroupID)}
                         >
                         Delete Group
@@ -215,34 +222,34 @@ class AddGroupMenu extends Component {
                 </div>
 
                 <div style={{ padding: "10px" }}>
-                    <form>
+                    <form onSubmit={this.submitUpdateGroup}>
                     <Input
                         type="text"
                         name="updateGroupID"
-                        isSet={false}
-                        fullWidth="true"
+                        isset={false}
+                        fullWidth={true}
                         onChange={this.handleChange}
                         label="Group ID"
                     />
                     <Input
                         type="text"
                         name="updateGroupAdd"
-                        isSet={true}
-                        fullWidth="true"
+                        isset={true}
+                        fullWidth={true}
                         onChange={this.handleChange}
                         label="Add Members"
                     />
                     <Input
                         type="text"
                         name="updateGroupRemove"
-                        isSet={true}
-                        fullWidth="true"
+                        isset={true}
+                        fullWidth={true}
                         onChange={this.handleChange}
                         label="Remove Members"
                     />
-                    <RaisedButton
-                        fullWidth="true"
-                        //onClick={}
+                    <RaisedButton   
+                        fullWidth={true}
+                        type="submit"
                     > Update Existing Group
                     </RaisedButton>
                     </form>

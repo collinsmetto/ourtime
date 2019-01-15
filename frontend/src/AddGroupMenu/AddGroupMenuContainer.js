@@ -47,14 +47,13 @@ class AddGroupMenuContainer extends Component {
             
             <AddGroupMenu handleMousesDown={this.handleMouseDown}
                   menuVisibility={this.state.visible}
-                  currData={this.props.data}
                   createGroup={this.props.createGroup}
                   deleteGroup={this.props.deleteGroup}
                   updateGroup={this.props.updateGroup}/>
 
             <form onSubmit={this.handleMouseDown}>
             <RaisedButton 
-                type="submit"  variant="contained" color="primary" fullWidth="true"> Edit Groups
+                type="submit"  variant="contained" color="primary" fullWidth={true}> Edit Groups
             </RaisedButton>
             </form> 
             

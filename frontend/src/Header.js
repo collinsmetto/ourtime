@@ -57,7 +57,7 @@ class Header extends React.Component {
 
     return (
       <div className={classes.root}>
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <div className="g-signin2" data-onsuccess="onSignIn"></div>
         {/* <FormGroup>
           <FormControlLabel
             control={
