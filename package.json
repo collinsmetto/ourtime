@@ -12,6 +12,7 @@
     "axios": "^0.18.0",
     "concurrently": "^4.1.0",
     "cookie-session": "^2.0.0-beta.3",
+    "material-ui-icons": "^1.0.0-beta.36",
     "moment": "^2.23.0",
     "moment-range": "^4.0.1",
     "nodemon": "^1.18.4",

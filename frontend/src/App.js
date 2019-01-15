@@ -23,10 +23,12 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    const token = this.props.tokenFromLogIn;
+
     var groups = {};
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('Authorization', this.state.token);
+    myHeaders.append('Authorization', token);
 
     fetch('http://localhost:4000/profile/getallgroups', {
     method: 'GET',
@@ -47,7 +49,7 @@ class App extends Component {
     this.state = { 
       isAuthenticated: false,
       user: null,
-      token: this.props.tokenFromLogIn,
+      token: token,
       stateCalAllGroups: [], 
       stateCalSingleGroup: [],
       isSingleGroup: false,
@@ -327,7 +329,8 @@ class App extends Component {
     return (
         <div>
         <div>
-           <Header />
+           <Header 
+              logout={this.props.logout}/>
         </div>
         
           <div className="row">

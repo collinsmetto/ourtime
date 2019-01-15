@@ -6,6 +6,7 @@ import "./ContactForm";
 //import axios from "axios";
 import App from "./App";
 import ContactForm from "./ContactForm";
+import { blue } from "@material-ui/core/colors";
 
 class LoginPage extends Component {
     constructor(props, context) {
@@ -42,6 +43,7 @@ class LoginPage extends Component {
     
     render() {
         let googleResponse = (response) => {
+            //console.log("Function is called: ", response);
             const tokenBlob = new Blob([JSON.stringify({access_token: response.accessToken}, null, 2)], {type : 'application/json'});
             const options = {
                 method: 'POST',
@@ -50,14 +52,15 @@ class LoginPage extends Component {
                 cache: 'default'
             };
             fetch('http://localhost:4000/api/v1/auth/google', options).then(r => {
+                //console.log("Fetch is called successfully", r);
                 const token = r.headers.get('x-auth-token');
-                console.log(token);
+                //console.log(token);
                 r.json().then(user => {
                     if (token) {
                         this.setState({isAuthenticated: true, user, token});
-                        console.log(this.state.isAuthenticated);
+                        //console.log("Token: ", token);
                     }
-                    else console.log("Token does not exist?: " + this.state.isAuthenticated);
+                    //else console.log("Token does not exist?: " + this.state.isAuthenticated);
                 });
             })
         };
@@ -80,33 +83,35 @@ class LoginPage extends Component {
                 <App 
                     tokenFromLogIn = {this.state.token}
                     getDataFromDb = {this.getDataFromDb}
+                    logout={this.logout}
                  />
              
-                <div>
+                {/*<div>
                     <button onClick={this.getDataFromDb} className="button">
                         GetDatafromDb
                     </button>
                 </div>
-                <div>
+                 <div>
                     <button onClick={this.logout} className="button">
                         Log out
                     </button>
-                </div>
+                </div> */}
                 <div><ContactForm/></div>
             </div>
         ) :
-        (   <div>
+        (   <div className="loginPage">
 
             <div className="welcomeText">
                 <h1>Welcome to Our Time</h1>
                 <p>Please sign in with your Google Account</p>
-                </div>
-            <div id="loginButton">
+                {/* </div>
+            <div > */}
+                {/* <div className="g-signin2" data-onsuccess="onSignIn"></div> */}
                 <GoogleLogin
-                    className="loginButton"
                     clientId="638468978131-3h0pn864qjf12p11vjig3lr27qpondnf.apps.googleusercontent.com"
                     scope = "email profile https://www.googleapis.com/auth/calendar"
                     buttonText="Login"
+                    // style={{ color: "3f51b5" }}
                     onSuccess={googleResponse}
                     onFailure={googleResponse}
                     offline={false}

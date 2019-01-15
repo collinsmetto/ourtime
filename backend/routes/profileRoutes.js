@@ -26,7 +26,7 @@ router.get('/getallgroups', async (req, res) => {
         User.findOne({
             email:user.email
 
-        }, function(err, user) {
+        }, async function(err, user) {
          console.log(user);
          var allgroups = user.groups; //get details
 
