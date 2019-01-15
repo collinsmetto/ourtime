@@ -4,15 +4,17 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+// import AccountCircle from 'material-ui-icons/AccountCircle';
 // import MenuIcon from '@material-ui/icons/Menu';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
+// import Switch from '@material-ui/core/Switch';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 //import LoginPage from './LoginPage';
-import {GoogleLogin, GoogleLogout} from 'react-google-login';
+ import {GoogleLogin, GoogleLogout} from 'react-google-login';
 
 const styles = {
   root: {
@@ -51,13 +53,13 @@ class Header extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
-    const responseGoogle = (response) => {
-      console.log(response);
-    }
+    // const responseGoogle = (response) => {
+    //   console.log(response);
+    // }
 
     return (
       <div className={classes.root}>
-        <div className="g-signin2" data-onsuccess="onSignIn"></div>
+        
         {/* <FormGroup>
           <FormControlLabel
             control={
@@ -77,21 +79,25 @@ class Header extends React.Component {
             </Typography>
             {/* <GoogleLogout
               buttonText="Logout"
-              onLogoutSuccess={logout}
+              onLogoutSuccess={this.props.logout}
             >
-            </GoogleLogout> */}
-            {auth && (
+            </GoogleLogout>  */}
+            {/* {auth && ( */}
               <div>
-                <IconButton
+                <Button 
+                color="inherit"
+                onClick={this.props.logout}>
+                Logout</Button>
+                {/* <IconButton
                   aria-owns={open ? 'menu-appbar' : undefined}
                   aria-haspopup="true"
                   onClick={this.handleMenu}
                   color="inherit"
                 >
-                 
-                </IconButton>
+                Logout
+                </IconButton> */}
                 
-                <Menu
+                {/* <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
@@ -105,11 +111,10 @@ class Header extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                </Menu>
+                  <MenuItem onClick={this.props.logout}>Log Out</MenuItem>
+                </Menu> */}
               </div>
-            )}
+            {/* )} */}
           </Toolbar>
         </AppBar>
       </div>

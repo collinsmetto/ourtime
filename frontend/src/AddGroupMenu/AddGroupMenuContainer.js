@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AddGroupMenuButton from "./AddGroupMenuButton";
+//import AddGroupMenuButton from "./AddGroupMenuButton";
 import RaisedButton from "@material-ui/core/Button";
 import AddGroupMenu from "./AddGroupMenu";
 //import NewGroupQuery from "./NewGroupQuery";
@@ -40,7 +40,7 @@ class AddGroupMenuContainer extends Component {
     }
 
     render() {
-        var data = this.props.data;
+        //var data = this.props.data;
 
         return (
             <div>

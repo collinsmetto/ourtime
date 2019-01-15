@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import GroupItems from "./GroupItems";
-import Input from '@material-ui/core/TextField';
-import ReactSearchBox from 'react-search-box'
+//import Input from '@material-ui/core/TextField';
+//import ReactSearchBox from 'react-search-box'
 //import SearchBar from "./SearchBar";
 //import "GroupList.css";
 
@@ -39,12 +39,12 @@ class GroupList extends Component {
     filterGroups(e){
         // Implemented with Calendar
         //console.log(this.state.freeTimes);
-        const { results } = this.state;
-        const { allGroups } = this.props; 
+        //const { results } = this.state;
+        //const { allGroups } = this.props; 
 
-        var currGroup = this.state.groupItems.filter(function (group) {
-            return (group.name === e.key)
-        } );
+        // var currGroup = this.state.groupItems.filter(function (group) {
+        //     return (group.name === e.key)
+        // } );
         //results = allGroups;
     }
 

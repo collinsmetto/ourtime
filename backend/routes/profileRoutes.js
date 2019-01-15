@@ -10,9 +10,8 @@ var timeFinder = require('../modules/timeFinder'); // import time finder module
 
 /******************************************************************************************/
 
-router.get('/response', (req, res) => {
-        console.log("in /profile/response");
-        console.log(req.headers.authorization)
+router.get('/getallgroups', async (req, res) => {
+       
 
       var token = req.headers.authorization; 
       if (!token) {
@@ -27,13 +26,16 @@ router.get('/response', (req, res) => {
         User.findOne({
             email:user.email
 
-        }, function(err, user) {
+        }, async function(err, user) {
          console.log(user);
+         var allgroups = user.groups; //get details
+
            if (err) throw err;
-              
+        let groups = await Group.find({groupName: allgroups})
             res.json({
                 user: user, // return both user and token
                 token: token,
+                groups: groups
        
             });
          });

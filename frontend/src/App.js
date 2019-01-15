@@ -5,13 +5,13 @@ import moment from "moment";
 import Header from './Header.js';
 import "./App.css";
 
-import axios from "axios";
-import Input from "@material-ui/core/Button";
-import { GoogleLogin } from 'react-google-login';
-import config from './config.json';
-import GroupList from './GroupList.js'
-import GroupItems from './GroupItems.js'
-import Event_Comp from './Event_Comp.js'
+// import axios from "axios";
+// import Input from "@material-ui/core/Button";
+// import { GoogleLogin } from 'react-google-login';
+// import config from './config.json';
+// import GroupList from './GroupList.js'
+// import GroupItems from './GroupItems.js'
+// import Event_Comp from './Event_Comp.js'
 
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -22,15 +22,39 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+
+    const token = this.props.tokenFromLogIn;
+
+    var groups = {};
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('Authorization', token);
+
+    fetch('http://localhost:4000/profile/getallgroups', {
+    method: 'GET',
+    headers: myHeaders,
+    })
+      .then(function(response) { 
+      return response.json();
+      })
+      .then(function(myJson) {
+        console.log(JSON.stringify(myJson));
+        myJson.forEach(function(group){
+          groups[group.ID] = group;
+        });
+           
+      }
+      );
+
     this.state = { 
       isAuthenticated: false,
       user: null,
-      token: this.props.tokenFromLogIn,
+      token: token,
       stateCalAllGroups: [], 
       stateCalSingleGroup: [],
       isSingleGroup: false,
       count: 0,
-      groups: {},
+      groups: groups,
       dbInfo: ''
     };
       
@@ -132,9 +156,9 @@ class App extends Component {
     });
 
     console.log("Current Calendar State", this.state.stateCalAllGroups, this.state.isSingleGroup);
-
-  }
   
+  } 
+        
 
 /* Changes state of groups 
   ADD: Adds group given group nickname and a Set object of emails
@@ -162,40 +186,45 @@ class App extends Component {
     myHeaders.append('groupname', newGroup.name)
     myHeaders.append('groupemails', newGroup.emails)
     
-      fetch('http://localhost:4000/profile/creategroup', {
-            method: 'GET',
-            headers: myHeaders,
-        })
-        .then(function(response) {  
-            return response.json();
-        })
-        .then(function(myJson) {
-            console.log(JSON.stringify(myJson)); ///* myJson consists of a group: groupName,groupId,users, invalidUsers,events,freetimes*/
-            this.setState({dbInfo: myJson.here}); 
-            // Get events of group from database
-            //newGroup.events = myJson.events;
-            
-            var currGroups = this.state.groups;
-        
-            //console.log("Prior to adding new group", this.state.groups);
-
-            var events = (groupName === "Yerr") ? ([
-              {
-                start: new Date('2018-12-08T02:00:00-05:00'),
-                end: new Date('2018-12-08T03:00:00-05:00'),
-                title: "Some title" 
-              },
+    fetch('http://localhost:4000/profile/creategroup', {
+          method: 'GET',
+          headers: myHeaders,
+      })
+      .then(function(response) {  
+          return response.json();
+      })
+      .then(function(group) {
+          //console.log(JSON.stringify(myJson)); ///* myJson consists of a group: groupName,groupId,users, invalidUsers,events,freetimes*/
+          // this.setState({dbInfo: myJson.here}); 
+          // Get events of group from database
+          //newGroup.events = myJson.events;
+          
+          var currGroups = this.state.groups;
       
-              {
-              start: new Date(2019, 0, 1, 12, 30),
-              end: new Date(2019, 0, 1, 17, 15),
-              title: "Trial#2"
-              }
-            ]) : ([{
-              start: new Date('2019-02-08T02:00:00-05:00'),
-              end: new Date('2019-02-08T03:00:00-05:00'),
-              title: "Some title" 
-            }]);
+          //console.log("Prior to adding new group", this.state.groups);
+
+            var events = group.freetimes;
+            events.map(function(event){
+              event.title = groupName;
+              return event;
+            });
+            // (groupName === "Yerr") ? ([
+            //   {
+            //     start: new Date('2018-12-08T02:00:00-05:00'),
+            //     end: new Date('2018-12-08T03:00:00-05:00'),
+            //     title: "Some title" 
+            //   },
+      
+            //   {
+            //   start: new Date(2019, 0, 1, 12, 30),
+            //   end: new Date(2019, 0, 1, 17, 15),
+            //   title: "Trial#2"
+            //   }
+            // ]) : ([{
+            //   start: new Date('2019-02-08T02:00:00-05:00'),
+            //   end: new Date('2019-02-08T03:00:00-05:00'),
+            //   title: "Some title" 
+            // }]);
 
             var newGroup = {
               name: groupName, 
@@ -224,25 +253,25 @@ class App extends Component {
     //console.log("djsandkajsndkas", groupID)
 
     /**********/
-        // send data to database
-        const myHeaders = new Headers();
+    // send data to database
+    const myHeaders = new Headers();
 
-        myHeaders.append('Content-Type', 'application/json');
-        myHeaders.append('Authorization', this.state.token);
-        myHeaders.append('groupid', groupID)
-        
-          fetch('http://localhost:4000/profile/deletegroup', {
-                method: 'GET',
-                headers: myHeaders,
-            })
-            .then(function(response) {  
-                return response.json();
-            })
-            .then(function(myJson) {
-                console.log(JSON.stringify(myJson));
-                this.setState({dbInfo: myJson.here}); 
-            }.bind(this)
-        );
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append('Authorization', this.state.token);
+    myHeaders.append('groupid', groupID)
+    
+      fetch('http://localhost:4000/profile/deletegroup', {
+            method: 'GET',
+            headers: myHeaders,
+        })
+        .then(function(response) {  
+            return response.json();
+        })
+        .then(function(myJson) {
+            console.log(JSON.stringify(myJson));
+            this.setState({dbInfo: myJson.here}); 
+        }.bind(this)
+    );
     /*************/
 
 
@@ -258,10 +287,10 @@ class App extends Component {
     if (updatedGroups[groupID])
     {
       //console.log("Yup");
-      for (var member of newMembers)
-        updatedGroups[groupID].emails.add(member);
-      for (var member of oldMembers)
-        updatedGroups[groupID].emails.delete(member);
+      for (var newMember of newMembers)
+        updatedGroups[groupID].emails.add(newMember);
+      for (var oldMember of oldMembers)
+        updatedGroups[groupID].emails.delete(oldMember);
     }
     // send data to database
     const myHeaders = new Headers();
@@ -300,9 +329,9 @@ class App extends Component {
     return (
         <div>
         <div>
-           <Header />
+           <Header 
+              logout={this.props.logout}/>
         </div>
-        
         
           <div className="row">
             <div className="column menu">
@@ -330,14 +359,13 @@ class App extends Component {
           
           </div>
 
-          <div style={{ padding: "10px" }}>
+          {/* <div style={{ padding: "10px" }}>
             
-           
             <button onClick={() => this.getmyFreeTime()}>
               GET MY FREE TIME
             </button>
 
-          </div>
+          </div> */}
 
         
   
