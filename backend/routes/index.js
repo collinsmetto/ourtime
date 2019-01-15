@@ -64,8 +64,7 @@ router.route('/auth/google')
       if (!req.user) {
             return res.send(401, 'User Not Authenticated');
         }  
-        console. log("in index routes")
-        console.log(req.user)
+       
         req.auth = {
             id: req.user.id, 
             email: req.user.email,

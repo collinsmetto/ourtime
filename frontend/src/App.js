@@ -5,13 +5,6 @@ import moment from "moment";
 import Header from './Header.js';
 import "./App.css";
 
-// import axios from "axios";
-// import Input from "@material-ui/core/Button";
-// import { GoogleLogin } from 'react-google-login';
-// import config from './config.json';
-// import GroupList from './GroupList.js'
-// import GroupItems from './GroupItems.js'
-// import Event_Comp from './Event_Comp.js'
 
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -38,8 +31,9 @@ class App extends Component {
       return response.json();
       })
       .then(function(myJson) {
+        console.log("IN APPP.JS \n\n\n")
         console.log(JSON.stringify(myJson));
-        myJson.forEach(function(group){
+        myJson.groups.forEach(function(group){
           groups[group.ID] = group;
         });
            
@@ -67,9 +61,9 @@ class App extends Component {
   }
 
   // TO BE DEFINED IN LOGINPAGE.JS
-  logout = () => {
-      this.setState({isAuthenticated: false, token: '', user: null})
-  };
+  // logout = () => {
+  //     this.setState({isAuthenticated: false, token: '', user: null})
+  // };
 
   onFailure = (error) => {
       alert(error);
