@@ -2,10 +2,9 @@ import React, { Component } from "react";
 
 import {GoogleLogin} from 'react-google-login';
 import "./LoginPage.css";
-import "./ContactForm";
+// import "./ContactForm";
 //import axios from "axios";
 import App from "./App";
-import ContactForm from "./ContactForm";
 import { blue } from "@material-ui/core/colors";
 
 class LoginPage extends Component {
@@ -98,7 +97,6 @@ class LoginPage extends Component {
                         Log out
                     </button>
                 </div> */}
-                <div><ContactForm/></div>
             </div>
         ) :
         (   <div className="loginPage">

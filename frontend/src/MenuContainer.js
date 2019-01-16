@@ -28,7 +28,11 @@ class MenuContainer extends Component {
         return (
             <div>
                 {/* <h1>Meetups</h1> */}
-                
+
+                <form onSubmit={this.viewAllGroups}>
+                <RaisedButton type="submit"  variant="contained" color="primary" fullWidth={true}> View All Times</RaisedButton>
+                </form>
+
                 <br/>
                 <AddGroupMenuContainer
                 createGroup={this.props.createGroup}
@@ -37,7 +41,6 @@ class MenuContainer extends Component {
                 />
 
                 <form onSubmit={this.addGroupToCalendar}>
-                <label>Group Members</label>
                 <GroupList 
                     groups={this.props.groups}
                     viewSingleGroup={this.props.viewSingleGroup}/>
@@ -45,9 +48,7 @@ class MenuContainer extends Component {
                     
 
                 <br/>
-                <form onSubmit={this.viewAllGroups}>
-                <RaisedButton type="submit"  variant="contained" color="primary" fullWidth={true}> View All Times</RaisedButton>
-                </form>
+                
             </div>
         );
     }

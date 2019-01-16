@@ -143,9 +143,10 @@ class App extends Component {
               }
               else 
               {
-                this.setState({ 
+                var allGroups = new Set(this.state.stateCalAllGroups.concat(groupFreeTimes));
+                this.setState({
                   //
-                  stateCalAllGroups: this.state.stateCalAllGroups.concat(groupFreeTimes),
+                  stateCalAllGroups: [...allGroups],
                   isSingleGroup: false
                 });
               }
@@ -162,40 +163,77 @@ class App extends Component {
 
 /**** */
   viewSingleGroup = (groupId) => {
-    console.log();
+    console.log("Call to view single group");
     this.viewGroup(groupId, true);
   }
     
 
   viewAllGroups = () => {
     console.log("Call to view all groups");
+    console.log(Object.keys(this.state.groups));
+    Object.keys(this.state.groups).forEach(function(groupId) {
+      this.viewGroup(groupId, false);
+      
+      console.log("Groups: ", this.state.groups[groupId]);
+    }.bind(this))
+  }
+
     //var allGroupTimes = new Set();
     // for (var group in this.state.groups) {
     //   if (group.events)
     //     allGroupTimes.add(group.events);
-    // }
+    // // }
+    // var groups = {};
+    // const myHeaders = new Headers();
+    // myHeaders.append('Content-Type', 'application/json');
+    // myHeaders.append('Authorization', this.state.token);
 
+    // fetch('http://localhost:4000/profile/getallgroups', {
+    // method: 'GET',
+    // headers: myHeaders,
+    // })
+    //   .then(function(response) { 
+    //   return response.json();
+    //   })
+    //   .then(function(myJson) {
+    //     console.log("IN APPP.JS \n\n\n")
+    //     // console.log(JSON.stringify(myJson));
+    //     myJson.groups.forEach(function(group){
+    //       // console.log(group.groupId);
+    //       groups[group.groupId] = group;
+    //     });
+         
+    //   }
+    //   );
 
-    Object.keys(this.state.groups).forEach(function(groupId) {
-      this.viewGroup(groupId, false);
-      // const groupEvents = this.state.groups[key].events;
-      // //console.log(groupEvents);
-      // if(groupEvents)
-      // {
-      //   Object.keys(groupEvents).forEach(function(key){
-      //     //console.log(groupEvents[key]);
-      //     allGroupTimes.add(groupEvents[key]);
-      //   })
+    //   console.log("Call for groups", groups[1547608759503]);
+    //   for (const [groupId, group] of Object.entries(groups))
+    //   console.log("Call for groups: ", group);   
 
-        // for (var event in group.events)
-        // {
-        //   //Object.keys()
-        //   console.log(event);
-        //   allGroupTimes.add(event);
-        // }
-      // }
-        }.bind(this)
-    );
+    // const groupFreeTimes = [];
+    // //for (var group in groups) console.log(group);
+
+    // // console.log("Group free times: " + groups[groupId].group.freetimes);
+    // Object.keys(groups).forEach(function(groupId) {
+    // //this.viewGroup(groupId, false);
+    
+    //   console.log("Groups: ", groups[groupId]);
+    //   if (groups[groupId].group.freetimes)
+    //   {
+        
+        
+    //     groups[groupId].group.freetimes[0].forEach(function(event){
+    //       var date = {start: new Date(event.start),
+    //                   end: new Date(event.end),
+    //                   title: groups[groupId].group.groupName}
+    //       groupFreeTimes.add(date);
+    //     });
+    //   }
+
+    //   console.log("Call to view group with ID: " + groupId);
+    
+
+/** */
 
     // let allGroupTimesArray = [];
     
@@ -209,7 +247,17 @@ class App extends Component {
 
     // console.log("Current Calendar State", this.state.stateCalAllGroups, this.state.isSingleGroup);
   
-  } 
+  // }); 
+
+  // this.setState({
+  //   //
+  //   stateCalAllGroups: groupFreeTimes,
+  //   isSingleGroup: false
+  // });
+
+  // console.log(this.state.stateCalAllGroups);
+  // console.log(groupFreeTimes);
+// }
         
 
 /* Changes state of groups 
@@ -395,7 +443,7 @@ class App extends Component {
                 defaultView="month"
                 //events = {[]}
                 events={this.state.isSingleGroup ? this.state.stateCalSingleGroup : this.state.stateCalAllGroups}
-                style={{ height: "80vh" }}
+                style={{height: "80vh" }}
               />
             </div>
           

@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import Input from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 
 class ContactForm extends Component{
   
@@ -30,23 +33,28 @@ class ContactForm extends Component{
 
     render(){
         return(
-            <div className="col-sm-4 offset-sm-4">
-                <form id="contact-form" onSubmit={this.handleSubmit.bind(this)} method="POST">
-                    <div className="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" className="form-control" id="name" />
+            
+            // <div className="col-sm-4 offset-sm-4">
+            
+                <form  id="contact-form" onSubmit={this.handleSubmit.bind(this)} method="POST">
+                    <div className="row">
+                        <div className="col-sm-4">
+                            {/* <label for="name">Name</label> */}
+                            <input placeholder="Name" type="text" className="form-control" id="name" />
+                        </div>
+                        <div className="col-sm-4">
+                            {/* <label for="exampleInputEmail1">Email address</label> */}
+                            <input placeholder="Email" type="email" className="form-control" id="email" aria-describedby="emailHelp" />
+                        </div>
+                        {/* <div className="form-group">
+                            <label for="message">Message</label>
+                            <textarea className="form-control" rows="5" id="message"></textarea>
+                        </div> */}
+                        <Button type="submit" color="inherit">Invite User</Button>
                     </div>
-                    <div className="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" className="form-control" id="email" aria-describedby="emailHelp" />
-                    </div>
-                    {/* <div className="form-group">
-                        <label for="message">Message</label>
-                        <textarea className="form-control" rows="5" id="message"></textarea>
-                    </div> */}
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    
                 </form>
-            </div>
+            // </div>
         )
     }
 }

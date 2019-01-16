@@ -34,7 +34,7 @@ class GroupItems extends Component {
             // this.viewSingleGroup.bind(this, group.ID)
             
             <form fullWidth={true} key={group.ID} onSubmit={this.showSingleGroup.bind(this, group.groupId)}>
-            <CopyToClipboard text={group.ID}>
+            <CopyToClipboard text={group.groupId}>
             <Button 
                 type="submit" 
                 fullWidth="true" 

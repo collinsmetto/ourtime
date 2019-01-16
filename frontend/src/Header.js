@@ -15,6 +15,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 //import LoginPage from './LoginPage';
  import {GoogleLogin, GoogleLogout} from 'react-google-login';
+import ContactForm from "./ContactForm";
+
+
 
 const styles = {
   root: {
@@ -83,6 +86,7 @@ class Header extends React.Component {
             >
             </GoogleLogout>  */}
             {/* {auth && ( */}
+              <div><ContactForm/></div>
               <div>
                 <Button 
                 color="inherit"
